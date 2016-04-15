@@ -269,6 +269,231 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/15/VMware下CentOS7配置hadoop/" itemprop="url">
+                  VMware下CentOS7配置hadoop
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-15T11:45:14+08:00" content="2016-04-15">
+              2016-04-15
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/15/VMware下CentOS7配置hadoop/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/15/VMware下CentOS7配置hadoop/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+		  
+		  
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="SSH服务安装与无密码登陆设置"><a href="#SSH服务安装与无密码登陆设置" class="headerlink" title="SSH服务安装与无密码登陆设置"></a>SSH服务安装与无密码登陆设置</h1><h2 id="安装SSH服务"><a href="#安装SSH服务" class="headerlink" title="安装SSH服务"></a>安装SSH服务</h2><h3 id="SSH简介："><a href="#SSH简介：" class="headerlink" title="SSH简介："></a>SSH简介：</h3><ul>
+<li>SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；</li>
+<li>SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。</li>
+<li>利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。</li>
+<li>透过 SSH 可以对所有传输的数据进行加密，也能够防止 DNS 欺骗和 IP 欺骗。</li>
+</ul>
+<h3 id="SSH安装"><a href="#SSH安装" class="headerlink" title="SSH安装"></a>SSH安装</h3><ul>
+<li>这里我用的是CentOS7,OpenSSH是默认安装的。</li>
+</ul>
+<hr>
+<ul>
+<li>检测SSH是否安装？ 打开终端，输入ssh，如下所示则表明已经安装了SSH</li>
+</ul>
+<hr>
+<pre><code>[root@localhost ~]# ssh
+</code></pre><hr>
+<ul>
+<li>usage: ssh [-1246AaCfgKkMNnqsTtVvXxYy] [-b bind_address] [-c cipher_spec]</li>
+<li>[-D [bind_address:]port] [-E log_file] [-e escape_char]</li>
+<li>[-F configfile] [-I pkcs11] [-i identity_file]</li>
+<li>[-L [bind_address:]port:host:hostport] [-l login_name] [-m mac_spec]</li>
+<li>[-O ctl_cmd] [-o option] [-p port]</li>
+<li>[-Q cipher | cipher-auth | mac | kex | key]</li>
+<li>[-R [bind_address:]port:host:hostport] [-S ctl_path] [-W host:port]</li>
+<li>[-w local_tun[:remote_tun]] [user@]hostname [command]</li>
+</ul>
+<hr>
+<p>若没有安装，则在终端执行下面的命令进行安装</p>
+<hr>
+<pre><code>yum install ssh
+</code></pre><hr>
+<h3 id="SSH启动"><a href="#SSH启动" class="headerlink" title="SSH启动"></a>SSH启动</h3><pre><code>[root@localhost ~]# service sshd start
+</code></pre><hr>
+<h3 id="SSH开机运行"><a href="#SSH开机运行" class="headerlink" title="SSH开机运行"></a>SSH开机运行</h3><hr>
+<pre><code>[root@localhost ~]# chkconfig sshd on
+</code></pre><hr>
+<h2 id="配置ssh免密码登录"><a href="#配置ssh免密码登录" class="headerlink" title="配置ssh免密码登录"></a>配置ssh免密码登录</h2><hr>
+<h3 id="检查配置"><a href="#检查配置" class="headerlink" title="检查配置"></a>检查配置</h3><hr>
+<p>Hadoop需要通过SSH来启动Slave节点的守护进程，即使安装伪分布式也需要SSH。<br>除了ssh外还需要rsync服务，rsync是一个远程数据同步工具，可通过LAN/WAN快速同步多台主机间的文件。<br>判断ssh和rsync有没有安装</p>
+<p>rpm –qa | grep openssh</p>
+<p>rpm –qa | grep rsync</p>
+<p>如果没有安装使用以下命令安装</p>
+<p>yum install ssh 安装SSH协议</p>
+<p>yum install rsync </p>
+<hr>
+<h3 id="配置免密码登录"><a href="#配置免密码登录" class="headerlink" title="配置免密码登录"></a>配置免密码登录</h3><hr>
+<h4 id="免密码登录的原理"><a href="#免密码登录的原理" class="headerlink" title="免密码登录的原理"></a>免密码登录的原理</h4><ul>
+<li><p>Master（NameNode | JobTracker）作为客户端，要实现无密码公钥认证，连接到服务器Salve（DataNode | Tasktracker）上时，<br>需要在Master上生成一个密钥对，包括一个公钥和一个私钥，而后将公钥复制到所有的Slave上。</p>
+</li>
+<li><p>当Master通过SSH连接Salve时，Salve就会生成一个随机数并用Master的公钥对随机数进行加密，并发送给Master。</p>
+</li>
+<li><p>Master收到加密数之后再用私钥解密，并将解密数回传给Slave，Slave确认解密数无误之后就允许Master进行连接了。</p>
+</li>
+</ul>
+<p>这就是一个公钥认证过程，其间不需要用户手工输入密码。<br>重要过程是将客户端Master复制到Slave上。</p>
+<hr>
+<h4 id="免密码登录实现"><a href="#免密码登录实现" class="headerlink" title="免密码登录实现"></a>免密码登录实现</h4><hr>
+<p><strong>1，使用普通用户登录CentOS。进入用户的home目录，执行如下命令</strong></p>
+<pre><code>$ ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa
+</code></pre><p><strong>注解：</strong></p>
+<ol>
+<li>ssh-keygen表示生成密钥；</li>
+<li>-t指定密钥类型；</li>
+<li>-P 提供密语；</li>
+<li>-f生成的密钥文件</li>
+</ol>
+<p>这条语句表示生成了一个无密码密钥对，此时目录下会生成id_rsa和id_rsa.pub两个文件，前者是私钥，后者是公钥</p>
+<hr>
+<p><strong>2，将公钥追加到授权key中</strong></p>
+<hr>
+<pre><code>$ cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre><hr>
+<p><strong>3，将授权key文件权限改为600（rr——-）</strong></p>
+<hr>
+<pre><code>$ chmod 600 ~/.ssh/authorized_keys
+</code></pre><hr>
+<p><strong>4,切换到root用户，修改ssh配置文件</strong></p>
+<hr>
+<pre><code>vim /etc/ssh/sshd_config
+</code></pre><hr>
+<p>修改其中部分内容（去掉原来的注释符号）</p>
+<ol>
+<li>RSAAuthentication yes # 启用 RSA 认证</li>
+<li>PubkeyAuthentication yes # 启用公钥私钥配对认证方式</li>
+<li>AuthorizedKeysFile .ssh/authorized_keys # 公钥文件路径（和上面生成的文件同）</li>
+</ol>
+<p>退出root用户，验证是否可以免密码登陆</p>
+<hr>
+<pre><code>[root@localhost ~]# ssh localhost
+</code></pre><hr>
+<p>Last login: Fri Apr 15 12:04:33 2016 from localhost</p>
+<p>这样就成功的登陆SSH了</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/11/虚拟机/" itemprop="url">
                   CentOS7 JDK 环境搭建
                 </a>
@@ -629,7 +854,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">2</span>
+              <span class="site-state-item-count">3</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -637,7 +862,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">2</span>
+                <span class="site-state-item-count">7</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -646,7 +871,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">8</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

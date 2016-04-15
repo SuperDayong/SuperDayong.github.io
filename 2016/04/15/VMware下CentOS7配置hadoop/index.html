@@ -64,7 +64,7 @@
 <link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="CentOS7,虚拟机,Vmware,linux," />
+  <meta name="keywords" content="hadoop,CentOS7,SSH," />
 
 
 
@@ -80,51 +80,28 @@
 
 
 
-<meta name="description" content="主要准备工具
-VMware（这里我用的是12版）
-CentOS-7-x86_64-DVD-1511.iso（有需要的可以找我要网盘地址）
-
-
-JDK操作步骤
-检查JDK版本
-[dayong@localhost ~]$ java -version
-
-
-java version “1.7.0_51”
-OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
+<meta name="description" content="SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
+SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；
+SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。
+利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。
+透过 SSH 可以对所有传输的">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CentOS7 JDK 环境搭建">
-<meta property="og:url" content="http://yoursite.com/2016/04/11/虚拟机/index.html">
+<meta property="og:title" content="VMware下CentOS7配置hadoop">
+<meta property="og:url" content="http://yoursite.com/2016/04/15/VMware下CentOS7配置hadoop/index.html">
 <meta property="og:site_name" content="Super霸王肉条条">
-<meta property="og:description" content="主要准备工具
-VMware（这里我用的是12版）
-CentOS-7-x86_64-DVD-1511.iso（有需要的可以找我要网盘地址）
-
-
-JDK操作步骤
-检查JDK版本
-[dayong@localhost ~]$ java -version
-
-
-java version “1.7.0_51”
-OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
-<meta property="og:image" content="http://i.imgur.com/s6ltahF.png">
-<meta property="og:updated_time" content="2016-04-15T03:27:44.200Z">
+<meta property="og:description" content="SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
+SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；
+SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。
+利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。
+透过 SSH 可以对所有传输的">
+<meta property="og:updated_time" content="2016-04-15T04:40:51.125Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CentOS7 JDK 环境搭建">
-<meta name="twitter:description" content="主要准备工具
-VMware（这里我用的是12版）
-CentOS-7-x86_64-DVD-1511.iso（有需要的可以找我要网盘地址）
-
-
-JDK操作步骤
-检查JDK版本
-[dayong@localhost ~]$ java -version
-
-
-java version “1.7.0_51”
-OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
-<meta name="twitter:image" content="http://i.imgur.com/s6ltahF.png">
+<meta name="twitter:title" content="VMware下CentOS7配置hadoop">
+<meta name="twitter:description" content="SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
+SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；
+SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。
+利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。
+透过 SSH 可以对所有传输的">
 
 
 
@@ -142,7 +119,7 @@ OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
   };
 </script>
 
-  <title> CentOS7 JDK 环境搭建 | Super霸王肉条条 </title>
+  <title> VMware下CentOS7配置hadoop | Super霸王肉条条 </title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -302,7 +279,7 @@ OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
             
             
               
-                CentOS7 JDK 环境搭建
+                VMware下CentOS7配置hadoop
               
             
           </h1>
@@ -314,8 +291,8 @@ OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
               <i class="fa fa-calendar-o"></i>
             </span>
             <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-11T10:14:17+08:00" content="2016-04-11">
-              2016-04-11
+            <time itemprop="dateCreated" datetime="2016-04-15T11:45:14+08:00" content="2016-04-15">
+              2016-04-15
             </time>
           </span>
 
@@ -335,6 +312,18 @@ OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
 
                 
                 
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">hadoop</span>
+                  </a>
+                </span>
+
+                
+                
 
               
             </span>
@@ -344,8 +333,8 @@ OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
             
               <span class="post-comments-count">
                 &nbsp; | &nbsp;
-                <a href="/2016/04/11/虚拟机/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/11/虚拟机/" itemprop="commentsCount"></span>
+                <a href="/2016/04/15/VMware下CentOS7配置hadoop/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/15/VMware下CentOS7配置hadoop/" itemprop="commentsCount"></span>
                 </a>
               </span>
             
@@ -369,88 +358,98 @@ OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_6">
       
 
       
-        <h1 id="主要准备工具"><a href="#主要准备工具" class="headerlink" title="主要准备工具"></a>主要准备工具</h1><ol>
-<li>VMware（这里我用的是12版）</li>
-<li>CentOS-7-x86_64-DVD-1511.iso（有需要的可以找我要网盘地址）</li>
+        <h1 id="SSH服务安装与无密码登陆设置"><a href="#SSH服务安装与无密码登陆设置" class="headerlink" title="SSH服务安装与无密码登陆设置"></a>SSH服务安装与无密码登陆设置</h1><h2 id="安装SSH服务"><a href="#安装SSH服务" class="headerlink" title="安装SSH服务"></a>安装SSH服务</h2><h3 id="SSH简介："><a href="#SSH简介：" class="headerlink" title="SSH简介："></a>SSH简介：</h3><ul>
+<li>SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；</li>
+<li>SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。</li>
+<li>利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。</li>
+<li>透过 SSH 可以对所有传输的数据进行加密，也能够防止 DNS 欺骗和 IP 欺骗。</li>
+</ul>
+<h3 id="SSH安装"><a href="#SSH安装" class="headerlink" title="SSH安装"></a>SSH安装</h3><ul>
+<li>这里我用的是CentOS7,OpenSSH是默认安装的。</li>
+</ul>
+<hr>
+<ul>
+<li>检测SSH是否安装？ 打开终端，输入ssh，如下所示则表明已经安装了SSH</li>
+</ul>
+<hr>
+<pre><code>[root@localhost ~]# ssh
+</code></pre><hr>
+<ul>
+<li>usage: ssh [-1246AaCfgKkMNnqsTtVvXxYy] [-b bind_address] [-c cipher_spec]</li>
+<li>[-D [bind_address:]port] [-E log_file] [-e escape_char]</li>
+<li>[-F configfile] [-I pkcs11] [-i identity_file]</li>
+<li>[-L [bind_address:]port:host:hostport] [-l login_name] [-m mac_spec]</li>
+<li>[-O ctl_cmd] [-o option] [-p port]</li>
+<li>[-Q cipher | cipher-auth | mac | kex | key]</li>
+<li>[-R [bind_address:]port:host:hostport] [-S ctl_path] [-W host:port]</li>
+<li>[-w local_tun[:remote_tun]] [user@]hostname [command]</li>
+</ul>
+<hr>
+<p>若没有安装，则在终端执行下面的命令进行安装</p>
+<hr>
+<pre><code>yum install ssh
+</code></pre><hr>
+<h3 id="SSH启动"><a href="#SSH启动" class="headerlink" title="SSH启动"></a>SSH启动</h3><pre><code>[root@localhost ~]# service sshd start
+</code></pre><hr>
+<h3 id="SSH开机运行"><a href="#SSH开机运行" class="headerlink" title="SSH开机运行"></a>SSH开机运行</h3><hr>
+<pre><code>[root@localhost ~]# chkconfig sshd on
+</code></pre><hr>
+<h2 id="配置ssh免密码登录"><a href="#配置ssh免密码登录" class="headerlink" title="配置ssh免密码登录"></a>配置ssh免密码登录</h2><hr>
+<h3 id="检查配置"><a href="#检查配置" class="headerlink" title="检查配置"></a>检查配置</h3><hr>
+<p>Hadoop需要通过SSH来启动Slave节点的守护进程，即使安装伪分布式也需要SSH。<br>除了ssh外还需要rsync服务，rsync是一个远程数据同步工具，可通过LAN/WAN快速同步多台主机间的文件。<br>判断ssh和rsync有没有安装</p>
+<p>rpm –qa | grep openssh</p>
+<p>rpm –qa | grep rsync</p>
+<p>如果没有安装使用以下命令安装</p>
+<p>yum install ssh 安装SSH协议</p>
+<p>yum install rsync </p>
+<hr>
+<h3 id="配置免密码登录"><a href="#配置免密码登录" class="headerlink" title="配置免密码登录"></a>配置免密码登录</h3><hr>
+<h4 id="免密码登录的原理"><a href="#免密码登录的原理" class="headerlink" title="免密码登录的原理"></a>免密码登录的原理</h4><ul>
+<li><p>Master（NameNode | JobTracker）作为客户端，要实现无密码公钥认证，连接到服务器Salve（DataNode | Tasktracker）上时，<br>需要在Master上生成一个密钥对，包括一个公钥和一个私钥，而后将公钥复制到所有的Slave上。</p>
+</li>
+<li><p>当Master通过SSH连接Salve时，Salve就会生成一个随机数并用Master的公钥对随机数进行加密，并发送给Master。</p>
+</li>
+<li><p>Master收到加密数之后再用私钥解密，并将解密数回传给Slave，Slave确认解密数无误之后就允许Master进行连接了。</p>
+</li>
+</ul>
+<p>这就是一个公钥认证过程，其间不需要用户手工输入密码。<br>重要过程是将客户端Master复制到Slave上。</p>
+<hr>
+<h4 id="免密码登录实现"><a href="#免密码登录实现" class="headerlink" title="免密码登录实现"></a>免密码登录实现</h4><hr>
+<p><strong>1，使用普通用户登录CentOS。进入用户的home目录，执行如下命令</strong></p>
+<pre><code>$ ssh-keygen -t rsa -P &apos;&apos; -f ~/.ssh/id_rsa
+</code></pre><p><strong>注解：</strong></p>
+<ol>
+<li>ssh-keygen表示生成密钥；</li>
+<li>-t指定密钥类型；</li>
+<li>-P 提供密语；</li>
+<li>-f生成的密钥文件</li>
 </ol>
+<p>这条语句表示生成了一个无密码密钥对，此时目录下会生成id_rsa和id_rsa.pub两个文件，前者是私钥，后者是公钥</p>
 <hr>
-<h1 id="JDK操作步骤"><a href="#JDK操作步骤" class="headerlink" title="JDK操作步骤"></a>JDK操作步骤</h1><hr>
-<h2 id="检查JDK版本"><a href="#检查JDK版本" class="headerlink" title="检查JDK版本"></a>检查JDK版本</h2><hr>
-<pre><code>[dayong@localhost ~]$ java -version
+<p><strong>2，将公钥追加到授权key中</strong></p>
+<hr>
+<pre><code>$ cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys
 </code></pre><hr>
-<ul>
-<li>java version “1.7.0_51”</li>
-<li>OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_64 u51-b31)</li>
-<li>OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)</li>
-</ul>
+<p><strong>3，将授权key文件权限改为600（rr——-）</strong></p>
 <hr>
-<h2 id="检查JDK安装包"><a href="#检查JDK安装包" class="headerlink" title="检查JDK安装包"></a>检查JDK安装包</h2><hr>
-<pre><code>[dayong@localhost ~]$ rpm -qa | grep java
+<pre><code>$ chmod 600 ~/.ssh/authorized_keys
 </code></pre><hr>
-<ul>
-<li>python-javapackages-3.4.1-5.el7.noarch</li>
-<li>javapackages-tools-3.4.1-5.el7.noarch</li>
-<li>java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64</li>
-<li>tzdata-java-2014b-1.el7.noarch</li>
-<li>java-1.7.0-openjdk-1.7.0.51-2.4.5.5.el7.x86_64</li>
-</ul>
+<p><strong>4,切换到root用户，修改ssh配置文件</strong></p>
 <hr>
-<h2 id="卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）"><a href="#卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）" class="headerlink" title="卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）"></a>卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）</h2><hr>
-<pre><code>[dayong@localhost ~]$ rpm -e --nodeps tzdata-java-2014b-1.el7.noarch
+<pre><code>vim /etc/ssh/sshd_config
 </code></pre><hr>
-<ul>
-<li>错误：can’t create 事务 lock on /var/lib/rpm/.rpm.lock (权限不够)</li>
-<li>这一步就是说 dayong 账号没权限，很简单，我们直接用root账号（当然也可以赋权限，先简单着来吧）</li>
-</ul>
+<p>修改其中部分内容（去掉原来的注释符号）</p>
+<ol>
+<li>RSAAuthentication yes # 启用 RSA 认证</li>
+<li>PubkeyAuthentication yes # 启用公钥私钥配对认证方式</li>
+<li>AuthorizedKeysFile .ssh/authorized_keys # 公钥文件路径（和上面生成的文件同）</li>
+</ol>
+<p>退出root用户，验证是否可以免密码登陆</p>
 <hr>
-<pre><code>[dayong@localhost ~]$ su root 
-[root@localhost ~]# rpm -e --nodeps tzdata-java-2014b-1.el7.noarch
-[root@localhost ~]# rpm -e --nodeps java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64
-[root@localhost ~]# rpm -e --nodeps java-1.7.0-openjdk-1.7.0.51-2.4.5.5.el7.x86_64
+<pre><code>[root@localhost ~]# ssh localhost
 </code></pre><hr>
-<p>这样原有的JDK就被我们卸载干净了，接下来我们就可以安装自己下载的JDK了</p>
-<hr>
-<h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><hr>
-<p>首先进入到JDK压缩包的路径下</p>
-<hr>
-<pre><code>cd /home/dayong/下载
-</code></pre><hr>
-<ul>
-<li>[root@localhost Downloads]# ls -l</li>
-<li>总用量 149936</li>
-<li>-rw-rw-r–. 1 dayong dayong 153530841 4月  11 13:14 jdk1.7.0_79.tar.gz</li>
-</ul>
-<hr>
-<p>将文件移到新建的java文件夹下面</p>
-<hr>
-<pre><code>cp jdk1.7.0_79.tar.gz /usr/local/java
-</code></pre><hr>
-<p>到java文件夹路径下解压压缩包，并删除原压缩包</p>
-<hr>
-<pre><code>tar xvf jdk1.7.0_79.tar.gz
-rm jdk1.7.0_79.tar.gz
-</code></pre><hr>
-<h2 id="配置JDK环境变量"><a href="#配置JDK环境变量" class="headerlink" title="配置JDK环境变量"></a>配置JDK环境变量</h2><hr>
-<p>这里直接采用全局设置，修改文件 etc/profile 文件</p>
-<hr>
-<pre><code>gedit /etc/profile 或者 vi /etc/profile
-</code></pre><hr>
-<p>在文件末尾添加如下几行环境变量配置:</p>
-<pre><code>export JAVA_HOME=/usr/local/java/jdk1.7.0_79
-export JRE_HOME=/usr/local/java/jdk1.7.0_79/jre
-export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-export PATH=$PATH:$JAVA_HOME/bin
-</code></pre><p>保存并退出文件，接下来使文件生效</p>
-<hr>
-<pre><code>1，source /etc/profile   --使文件生效
-2，reboot --重启生效
-</code></pre><hr>
-<p>在终端输入</p>
-<hr>
-<pre><code>java -version
-</code></pre><hr>
-<p><img src="http://i.imgur.com/s6ltahF.png" alt=""></p>
-<p>到这里，JDK环境已经搭配好了</p>
+<p>Last login: Fri Apr 15 12:04:33 2016 from localhost</p>
+<p>这样就成功的登陆SSH了</p>
 <hr>
 
       
@@ -472,13 +471,11 @@ export PATH=$PATH:$JAVA_HOME/bin
       
         <div class="post-tags">
           
+            <a href="/tags/hadoop/" rel="tag">#hadoop</a>
+          
             <a href="/tags/CentOS7/" rel="tag">#CentOS7</a>
           
-            <a href="/tags/虚拟机/" rel="tag">#虚拟机</a>
-          
-            <a href="/tags/Vmware/" rel="tag">#Vmware</a>
-          
-            <a href="/tags/linux/" rel="tag">#linux</a>
+            <a href="/tags/SSH/" rel="tag">#SSH</a>
           
         </div>
       
@@ -487,17 +484,13 @@ export PATH=$PATH:$JAVA_HOME/bin
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2016/04/07/My-new-post/" rel="next" title="第一篇Hexo博客">
-                <i class="fa fa-chevron-left"></i> 第一篇Hexo博客
+              <a href="/2016/04/11/虚拟机/" rel="next" title="CentOS7 JDK 环境搭建">
+                <i class="fa fa-chevron-left"></i> CentOS7 JDK 环境搭建
               </a>
             
           </div>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2016/04/15/VMware下CentOS7配置hadoop/" rel="prev" title="VMware下CentOS7配置hadoop">
-                VMware下CentOS7配置hadoop <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -523,8 +516,8 @@ export PATH=$PATH:$JAVA_HOME/bin
           
   <div class="comments" id="comments">
     
-      <div class="ds-thread" data-thread-key="2016/04/11/虚拟机/"
-           data-title="CentOS7 JDK 环境搭建" data-url="http://yoursite.com/2016/04/11/虚拟机/">
+      <div class="ds-thread" data-thread-key="2016/04/15/VMware下CentOS7配置hadoop/"
+           data-title="VMware下CentOS7配置hadoop" data-url="http://yoursite.com/2016/04/15/VMware下CentOS7配置hadoop/">
       </div>
     
   </div>
@@ -617,7 +610,7 @@ export PATH=$PATH:$JAVA_HOME/bin
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#主要准备工具"><span class="nav-number">1.</span> <span class="nav-text">主要准备工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK操作步骤"><span class="nav-number">2.</span> <span class="nav-text">JDK操作步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#检查JDK版本"><span class="nav-number">2.1.</span> <span class="nav-text">检查JDK版本</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#检查JDK安装包"><span class="nav-number">2.2.</span> <span class="nav-text">检查JDK安装包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）"><span class="nav-number">2.3.</span> <span class="nav-text">卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#安装JDK"><span class="nav-number">2.4.</span> <span class="nav-text">安装JDK</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置JDK环境变量"><span class="nav-number">2.5.</span> <span class="nav-text">配置JDK环境变量</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSH服务安装与无密码登陆设置"><span class="nav-number">1.</span> <span class="nav-text">SSH服务安装与无密码登陆设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装SSH服务"><span class="nav-number">1.1.</span> <span class="nav-text">安装SSH服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH简介："><span class="nav-number">1.1.1.</span> <span class="nav-text">SSH简介：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH安装"><span class="nav-number">1.1.2.</span> <span class="nav-text">SSH安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH启动"><span class="nav-number">1.1.3.</span> <span class="nav-text">SSH启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH开机运行"><span class="nav-number">1.1.4.</span> <span class="nav-text">SSH开机运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置ssh免密码登录"><span class="nav-number">1.2.</span> <span class="nav-text">配置ssh免密码登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查配置"><span class="nav-number">1.2.1.</span> <span class="nav-text">检查配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置免密码登录"><span class="nav-number">1.2.2.</span> <span class="nav-text">配置免密码登录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#免密码登录的原理"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">免密码登录的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#免密码登录实现"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">免密码登录实现</span></a></li></ol></li></ol></li></ol></li></ol></div>
             
           </div>
         </section>
