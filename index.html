@@ -444,7 +444,20 @@
 </code></pre><hr>
 <p>Last login: Fri Apr 15 12:04:33 2016 from localhost</p>
 <p>这样就成功的登陆SSH了</p>
+<h2 id="这篇文章介绍的很详细：http-www-ithao123-cn-content-8728381-html"><a href="#这篇文章介绍的很详细：http-www-ithao123-cn-content-8728381-html" class="headerlink" title="这篇文章介绍的很详细：http://www.ithao123.cn/content-8728381.html"></a>这篇文章介绍的很详细：<a href="http://www.ithao123.cn/content-8728381.html" target="_blank" rel="external">http://www.ithao123.cn/content-8728381.html</a></h2><h1 id="创建hadoop用户"><a href="#创建hadoop用户" class="headerlink" title="创建hadoop用户"></a>创建hadoop用户</h1><hr>
+<pre><code>[root@localhost ~]# useradd -d /home/hadoop -s /bin/bash hadoop
+
+[root@localhost ~]# passwd hadoop
+</code></pre><hr>
+<p>设置好密码后，可以将hadoop用户添加到sudoer列表，在终端键入：</p>
 <hr>
+<pre><code>[root@localhost ~]# visudo
+</code></pre><hr>
+<p>然后在 <strong>root    ALL=(ALL)       ALL</strong> 下面添加hadoop用户配置，如下：</p>
+<hr>
+<pre><code>root    ALL=(ALL)       ALL
+hadoop  ALL=(ALL)       ALL 
+</code></pre><hr>
 
           
         
@@ -862,7 +875,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-count">3</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
