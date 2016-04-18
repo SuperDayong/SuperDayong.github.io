@@ -80,28 +80,29 @@
 
 
 
-<meta name="description" content="SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
+<meta name="description" content="JDK的安装请见上一篇《CentOS7 JDK 环境搭建》SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
 SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；
 SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。
-利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。
-透过 SSH 可以对所有传输的">
+利用 SSH 协议可以有效防止远程">
 <meta property="og:type" content="article">
 <meta property="og:title" content="VMware下CentOS7配置hadoop">
 <meta property="og:url" content="http://yoursite.com/2016/04/15/VMware下CentOS7配置hadoop/index.html">
 <meta property="og:site_name" content="Super霸王肉条条">
-<meta property="og:description" content="SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
+<meta property="og:description" content="JDK的安装请见上一篇《CentOS7 JDK 环境搭建》SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
 SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；
 SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。
-利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。
-透过 SSH 可以对所有传输的">
-<meta property="og:updated_time" content="2016-04-15T09:32:47.951Z">
+利用 SSH 协议可以有效防止远程">
+<meta property="og:image" content="http://i.imgur.com/UAD4NVG.png">
+<meta property="og:image" content="http://i.imgur.com/fLLNgKI.png">
+<meta property="og:image" content="http://i.imgur.com/CsZbAMK.png">
+<meta property="og:updated_time" content="2016-04-18T04:46:58.699Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="VMware下CentOS7配置hadoop">
-<meta name="twitter:description" content="SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
+<meta name="twitter:description" content="JDK的安装请见上一篇《CentOS7 JDK 环境搭建》SSH服务安装与无密码登陆设置安装SSH服务SSH简介：
 SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；
 SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。
-利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。
-透过 SSH 可以对所有传输的">
+利用 SSH 协议可以有效防止远程">
+<meta name="twitter:image" content="http://i.imgur.com/UAD4NVG.png">
 
 
 
@@ -358,7 +359,7 @@ SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较
       
 
       
-        <h1 id="SSH服务安装与无密码登陆设置"><a href="#SSH服务安装与无密码登陆设置" class="headerlink" title="SSH服务安装与无密码登陆设置"></a>SSH服务安装与无密码登陆设置</h1><h2 id="安装SSH服务"><a href="#安装SSH服务" class="headerlink" title="安装SSH服务"></a>安装SSH服务</h2><h3 id="SSH简介："><a href="#SSH简介：" class="headerlink" title="SSH简介："></a>SSH简介：</h3><ul>
+        <h1 id="JDK的安装请见上一篇《CentOS7-JDK-环境搭建》"><a href="#JDK的安装请见上一篇《CentOS7-JDK-环境搭建》" class="headerlink" title="JDK的安装请见上一篇《CentOS7 JDK 环境搭建》"></a>JDK的安装请见上一篇《CentOS7 JDK 环境搭建》</h1><h1 id="SSH服务安装与无密码登陆设置"><a href="#SSH服务安装与无密码登陆设置" class="headerlink" title="SSH服务安装与无密码登陆设置"></a>SSH服务安装与无密码登陆设置</h1><h2 id="安装SSH服务"><a href="#安装SSH服务" class="headerlink" title="安装SSH服务"></a>安装SSH服务</h2><h3 id="SSH简介："><a href="#SSH简介：" class="headerlink" title="SSH简介："></a>SSH简介：</h3><ul>
 <li>SSH 为 Secure Shell 的缩写，由 IETF 的网络工作小组（Network Working Group）所制定；</li>
 <li>SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较可靠，专为远程登录会话和其他网络服务提供安全性的协议。</li>
 <li>利用 SSH 协议可以有效防止远程管理过程中的信息泄露问题。</li>
@@ -464,6 +465,116 @@ SSH 为建立在应用层和传输层基础上的安全协议。SSH 是目前较
 <pre><code>root    ALL=(ALL)       ALL
 hadoop  ALL=(ALL)       ALL 
 </code></pre><hr>
+<p>接下来就是重头戏了，安装hadoop正式开始</p>
+<hr>
+<h1 id="安装Hadoop"><a href="#安装Hadoop" class="headerlink" title="安装Hadoop"></a>安装Hadoop</h1><hr>
+<p><strong>说明：我这里使用的是root账号，接下来也是单机版hadoop安装，伪分布式和分布式安装待以后有时间写，想了解的也可以给我留言。</strong></p>
+<hr>
+<h2 id="准备工作："><a href="#准备工作：" class="headerlink" title="准备工作："></a><strong>准备工作：</strong></h2><ol>
+<li><p>下载Hadoop,这里我下载的是 hadoop-2.7.1</p>
+<ul>
+<li>链接：<a href="http://pan.baidu.com/s/1c27EnPu" target="_blank" rel="external">http://pan.baidu.com/s/1c27EnPu</a> 密码：h5rg</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="操作步骤"><a href="#操作步骤" class="headerlink" title="操作步骤:"></a><strong>操作步骤:</strong></h2><h3 id="将下载好的hadoop压缩文件解压在home目录下的hadoop文件夹下"><a href="#将下载好的hadoop压缩文件解压在home目录下的hadoop文件夹下" class="headerlink" title="将下载好的hadoop压缩文件解压在home目录下的hadoop文件夹下"></a>将下载好的hadoop压缩文件解压在home目录下的hadoop文件夹下</h3><hr>
+<pre><code>创建home/hadoop目录: mkdir /home/hadoop
+
+将hadoop压缩文件移动到hadoop文件夹下面： mv /usr/hadoop-2.7.1.tar.gz /home/hadoop
+
+解压压缩文件到该目录： tar xvf hadoop-2.7.1.tar.gz
+
+这样解压完后可以删除压缩文件了： rm hadoop-2.7.1.tar.gz
+</code></pre><h3 id="到-home-hadoop-目录下新建几个文件夹"><a href="#到-home-hadoop-目录下新建几个文件夹" class="headerlink" title="到 /home/hadoop 目录下新建几个文件夹"></a>到 /home/hadoop 目录下新建几个文件夹</h3><hr>
+<pre><code>mkdir tmp
+
+mkdir hdfs
+
+mkdir hdfs/name
+
+mkdir hdfs/data
+</code></pre><h3 id="Hadoop-核心文件配置"><a href="#Hadoop-核心文件配置" class="headerlink" title="Hadoop 核心文件配置"></a>Hadoop 核心文件配置</h3><hr>
+<pre><code>在终端输入： gedit /home/hadoop/hadoop-2.7.1/etc/hadoop/core-site.xml
+</code></pre><p>添加：</p>
+<pre><code>&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;fs.defaultFS&lt;/name&gt;
+        &lt;value&gt;hdfs://localhost:9000&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;hadoop.tmp.dir&lt;/name&gt;
+        &lt;value&gt;file:/home/hadoop/tmp&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;io.file.buffer.size&lt;/name&gt;
+        &lt;value&gt;131702&lt;/value&gt;
+    &lt;/property&gt;
+ &lt;/configuration&gt;
+</code></pre><hr>
+<pre><code>在终端输入： gedit /home/hadoop/hadoop-2.7.1/etc/hadoop/hdfs-site.xml
+</code></pre><p>添加：</p>
+<pre><code>&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt;
+        &lt;value&gt;file:/home/hadoop/hdfs/name&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;
+        &lt;value&gt;file:/home/hadoop/hdfs/data&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.replication&lt;/name&gt;
+        &lt;value&gt;2&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt;
+        &lt;value&gt;localhost:9001&lt;/value&gt;
+    &lt;/property&gt;
+    &lt;property&gt;
+        &lt;name&gt;dfs.webhdfs.enabled&lt;/name&gt;
+        &lt;value&gt;true&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre><hr>
+<ul>
+<li>mapred-site.xml 这个文件不存在，存有的是 mapred-queues.xml.template 这个文件，</li>
+<li>复制mapred-site.xml.template一份，并把名字改为mapred-site.xml</li>
+</ul>
+<hr>
+<pre><code>在终端输入： gedit /home/hadoop/hadoop-2.7.1/etc/hadoop/mapred-site.xml
+</code></pre><p>添加：</p>
+<pre><code>&lt;configuration&gt;
+    &lt;property&gt;
+        &lt;name&gt;mapreduce.framework.name&lt;/name&gt;
+        &lt;value&gt;yarn&lt;/value&gt;
+    &lt;/property&gt;
+&lt;/configuration&gt;
+</code></pre><hr>
+<p>是不是很简单，这样子你的单机版的hadoop到此为止就已经配置完成了，下面我们一一验证是否成功吧</p>
+<h1 id="验证Hadoop是否可以成功启动"><a href="#验证Hadoop是否可以成功启动" class="headerlink" title="验证Hadoop是否可以成功启动"></a>验证Hadoop是否可以成功启动</h1><h3 id="格式化hdfs"><a href="#格式化hdfs" class="headerlink" title="格式化hdfs"></a>格式化hdfs</h3><pre><code>执行： cd home/hadoop/hadoop-2.7.1 进入hadoop目录
+
+格式化hdfs: bin/hadoop namenode -format
+</code></pre><p><img src="http://i.imgur.com/UAD4NVG.png" alt=""></p>
+<p>出现如上图所示的那句话，就是格式化成功啦！！！接下来我们启动所有服务，拭目以待。</p>
+<hr>
+<h3 id="启动服务"><a href="#启动服务" class="headerlink" title="启动服务"></a>启动服务</h3><pre><code>执行： ./sbin/start-all.sh 启动所有服务
+</code></pre><p>也可以分开执行：</p>
+<pre><code>./sbin/start-dfs.sh
+./sbin/start-yarn.sh
+</code></pre><hr>
+<h3 id="浏览器查看监控信息"><a href="#浏览器查看监控信息" class="headerlink" title="浏览器查看监控信息"></a>浏览器查看监控信息</h3><h4 id="hdfs监控"><a href="#hdfs监控" class="headerlink" title="hdfs监控"></a>hdfs监控</h4><p>在浏览器输入： <a href="http://localhost:50070" target="_blank" rel="external">http://localhost:50070</a></p>
+<p>效果如下：</p>
+<p><img src="http://i.imgur.com/fLLNgKI.png" alt=""></p>
+<h4 id="yarn监控"><a href="#yarn监控" class="headerlink" title="yarn监控"></a>yarn监控</h4><p>在浏览器输入： <a href="http://localhost:8088" target="_blank" rel="external">http://localhost:8088</a></p>
+<p><img src="http://i.imgur.com/CsZbAMK.png" alt=""></p>
+<h1 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h1><hr>
+<ul>
+<li><p>写到这里，Hadoop单机版已经弄好，伪分布式就是多了几个节点，可以并行处理，之后有需求的话我会写一下，主要将hadoop的那几个核心文件和hosts文件重新配置一下；</p>
+</li>
+<li><p>这篇文章主要是为初学者提供一些信息，避免走很多弯路，如有问题的话随时欢迎给我留言，或者将问题发到我邮箱里面。</p>
+</li>
+</ul>
 
       
     </div>
@@ -623,7 +734,7 @@ hadoop  ALL=(ALL)       ALL
               
             
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#SSH服务安装与无密码登陆设置"><span class="nav-number">1.</span> <span class="nav-text">SSH服务安装与无密码登陆设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装SSH服务"><span class="nav-number">1.1.</span> <span class="nav-text">安装SSH服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH简介："><span class="nav-number">1.1.1.</span> <span class="nav-text">SSH简介：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH安装"><span class="nav-number">1.1.2.</span> <span class="nav-text">SSH安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH启动"><span class="nav-number">1.1.3.</span> <span class="nav-text">SSH启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH开机运行"><span class="nav-number">1.1.4.</span> <span class="nav-text">SSH开机运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置ssh免密码登录"><span class="nav-number">1.2.</span> <span class="nav-text">配置ssh免密码登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查配置"><span class="nav-number">1.2.1.</span> <span class="nav-text">检查配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置免密码登录"><span class="nav-number">1.2.2.</span> <span class="nav-text">配置免密码登录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#免密码登录的原理"><span class="nav-number">1.2.2.1.</span> <span class="nav-text">免密码登录的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#免密码登录实现"><span class="nav-number">1.2.2.2.</span> <span class="nav-text">免密码登录实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#这篇文章介绍的很详细：http-www-ithao123-cn-content-8728381-html"><span class="nav-number">1.3.</span> <span class="nav-text">这篇文章介绍的很详细：http://www.ithao123.cn/content-8728381.html</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建hadoop用户"><span class="nav-number">2.</span> <span class="nav-text">创建hadoop用户</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK的安装请见上一篇《CentOS7-JDK-环境搭建》"><span class="nav-number">1.</span> <span class="nav-text">JDK的安装请见上一篇《CentOS7 JDK 环境搭建》</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#SSH服务安装与无密码登陆设置"><span class="nav-number">2.</span> <span class="nav-text">SSH服务安装与无密码登陆设置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#安装SSH服务"><span class="nav-number">2.1.</span> <span class="nav-text">安装SSH服务</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH简介："><span class="nav-number">2.1.1.</span> <span class="nav-text">SSH简介：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH安装"><span class="nav-number">2.1.2.</span> <span class="nav-text">SSH安装</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH启动"><span class="nav-number">2.1.3.</span> <span class="nav-text">SSH启动</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SSH开机运行"><span class="nav-number">2.1.4.</span> <span class="nav-text">SSH开机运行</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置ssh免密码登录"><span class="nav-number">2.2.</span> <span class="nav-text">配置ssh免密码登录</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#检查配置"><span class="nav-number">2.2.1.</span> <span class="nav-text">检查配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置免密码登录"><span class="nav-number">2.2.2.</span> <span class="nav-text">配置免密码登录</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#免密码登录的原理"><span class="nav-number">2.2.2.1.</span> <span class="nav-text">免密码登录的原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#免密码登录实现"><span class="nav-number">2.2.2.2.</span> <span class="nav-text">免密码登录实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#这篇文章介绍的很详细：http-www-ithao123-cn-content-8728381-html"><span class="nav-number">2.3.</span> <span class="nav-text">这篇文章介绍的很详细：http://www.ithao123.cn/content-8728381.html</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#创建hadoop用户"><span class="nav-number">3.</span> <span class="nav-text">创建hadoop用户</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Hadoop"><span class="nav-number">4.</span> <span class="nav-text">安装Hadoop</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#准备工作："><span class="nav-number">4.1.</span> <span class="nav-text">准备工作：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#操作步骤"><span class="nav-number">4.2.</span> <span class="nav-text">操作步骤:</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#将下载好的hadoop压缩文件解压在home目录下的hadoop文件夹下"><span class="nav-number">4.2.1.</span> <span class="nav-text">将下载好的hadoop压缩文件解压在home目录下的hadoop文件夹下</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#到-home-hadoop-目录下新建几个文件夹"><span class="nav-number">4.2.2.</span> <span class="nav-text">到 /home/hadoop 目录下新建几个文件夹</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop-核心文件配置"><span class="nav-number">4.2.3.</span> <span class="nav-text">Hadoop 核心文件配置</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#验证Hadoop是否可以成功启动"><span class="nav-number">5.</span> <span class="nav-text">验证Hadoop是否可以成功启动</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#格式化hdfs"><span class="nav-number">5.0.1.</span> <span class="nav-text">格式化hdfs</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动服务"><span class="nav-number">5.0.2.</span> <span class="nav-text">启动服务</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#浏览器查看监控信息"><span class="nav-number">5.0.3.</span> <span class="nav-text">浏览器查看监控信息</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#hdfs监控"><span class="nav-number">5.0.3.1.</span> <span class="nav-text">hdfs监控</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#yarn监控"><span class="nav-number">5.0.3.2.</span> <span class="nav-text">yarn监控</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#后续"><span class="nav-number">6.</span> <span class="nav-text">后续</span></a></li></ol></div>
             
           </div>
         </section>
