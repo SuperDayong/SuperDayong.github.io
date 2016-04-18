@@ -269,6 +269,162 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/18/Hadoop-WordCount-运行实例/" itemprop="url">
+                  Hadoop WordCount 运行实例
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-18T14:38:34+08:00" content="2016-04-18">
+              2016-04-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/18/Hadoop-WordCount-运行实例/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/18/Hadoop-WordCount-运行实例/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+		  
+		  
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p>Hadoop中的WordCount就像是其他编程语言的HelloWorld一样，引导我们学习的开始</p>
+<hr>
+<p>进入终端：</p>
+<pre><code>首先进入hadoop目录： [root@localhost ~]# cd /home/hadoop/hadoop-2.7.1
+
+启动Hadoop: [root@localhost hadoop-2.7.1]# ./sbin/start-all.sh
+
+在HDFS中创建input文件目录： hadoop fs -mkdir /input2
+</code></pre><p>新建一个文件：</p>
+<pre><code>[root@localhost hadoop-2.7.1]# vi /home/hadoop/hadoop-2.7.1/dy02.txt 
+</code></pre><p>输入： Hello Hadoop,I am Dayong ! I love China ! I love learning Hadoop !</p>
+<pre><code>放到hdfs的input目录下面： hadoop fs -put /home/hadoop/hadoop-2.7.1/dy02.txt  /input2
+
+查看文件是否正确传入到/input目录下： localhost hadoop-2.7.1]# hadoop fs -ls /input2
+
+查看文件内容： hadoop fs -cat /input2/dy02.txt
+</code></pre><p>准备好这些，就可以执行wordcount实例了：</p>
+<pre><code>hadoop jar /home/hadoop/hadoop-2.7.1/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.1.jar wordcount /input2 /output2
+</code></pre><p>查看输出结果的目录：</p>
+<pre><code>hadoop fs -ls /output2
+</code></pre><p>查看输出结果：</p>
+<pre><code>hadoop fs -cat /output2/part-r-00000
+</code></pre><p><img src="http://i.imgur.com/QrZ1aPY.png" alt=""></p>
+<p>这样我们就算真正的开始了Hadoop之旅，下面就进入更加深奥的探索吧！</p>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/15/VMware下CentOS7配置hadoop/" itemprop="url">
                   VMware下CentOS7配置hadoop
                 </a>
@@ -309,8 +465,8 @@
 
               
                 <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Linux/hadoop/" itemprop="url" rel="index">
-                    <span itemprop="name">hadoop</span>
+                  <a href="/categories/Linux/Hadoop/" itemprop="url" rel="index">
+                    <span itemprop="name">Hadoop</span>
                   </a>
                 </span>
 
@@ -556,11 +712,12 @@ mkdir hdfs/data
 <pre><code>./sbin/start-dfs.sh
 ./sbin/start-yarn.sh
 </code></pre><hr>
-<h3 id="浏览器查看监控信息"><a href="#浏览器查看监控信息" class="headerlink" title="浏览器查看监控信息"></a>浏览器查看监控信息</h3><h4 id="hdfs监控"><a href="#hdfs监控" class="headerlink" title="hdfs监控"></a>hdfs监控</h4><p>在浏览器输入： <a href="http://localhost:50070" target="_blank" rel="external">http://localhost:50070</a></p>
+<h3 id="浏览器查看监控信息"><a href="#浏览器查看监控信息" class="headerlink" title="浏览器查看监控信息"></a>浏览器查看监控信息</h3><h4 id="HDFS监控"><a href="#HDFS监控" class="headerlink" title="HDFS监控"></a>HDFS监控</h4><p>在浏览器输入： <a href="http://localhost:50070" target="_blank" rel="external">http://localhost:50070</a></p>
 <p>效果如下：</p>
 <p><img src="http://i.imgur.com/fLLNgKI.png" alt=""></p>
-<h4 id="yarn监控"><a href="#yarn监控" class="headerlink" title="yarn监控"></a>yarn监控</h4><p>在浏览器输入： <a href="http://localhost:8088" target="_blank" rel="external">http://localhost:8088</a></p>
+<h4 id="Map-Reduce监控"><a href="#Map-Reduce监控" class="headerlink" title="Map-Reduce监控"></a>Map-Reduce监控</h4><p>在浏览器输入： <a href="http://localhost:8088" target="_blank" rel="external">http://localhost:8088</a></p>
 <p><img src="http://i.imgur.com/CsZbAMK.png" alt=""></p>
+<hr>
 <h1 id="后续"><a href="#后续" class="headerlink" title="后续"></a>后续</h1><hr>
 <ul>
 <li><p>写到这里，Hadoop单机版已经弄好，伪分布式就是多了几个节点，可以并行处理，之后有需求的话我会写一下，主要将hadoop的那几个核心文件和hosts文件重新配置一下；</p>
@@ -988,7 +1145,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">3</span>
+              <span class="site-state-item-count">4</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1005,7 +1162,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-count">9</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
