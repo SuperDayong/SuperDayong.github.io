@@ -1,0 +1,896 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+  <link href="/vendors/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css"/>
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+<link href="/vendors/font-awesome/css/font-awesome.min.css?v=4.4.0" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.0.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Linux,Hadoop,HBase,Zookeeper,分布式," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.0.1" />
+
+
+
+
+
+
+<meta name="description" content="声明
+环境：VMware12,2个CentOS7虚拟机，一台虚拟机名称为master.hadoop(NameNode),一台为slave1.hadoop(DataNode)
+
+IP配置192.168.123.10 master.hadoop
+192.168.123.11 slave1.hadoop
+
+VMware安装和CentOS安装
+百度一大堆，这里不再介绍，接下来直奔主题。
+
+静态IP配置
+在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CentOS7下分布式Hadoop">
+<meta property="og:url" content="http://yoursite.com/2016/04/20/CentOS7下分布式Hadoop/index.html">
+<meta property="og:site_name" content="Super霸王肉条条">
+<meta property="og:description" content="声明
+环境：VMware12,2个CentOS7虚拟机，一台虚拟机名称为master.hadoop(NameNode),一台为slave1.hadoop(DataNode)
+
+IP配置192.168.123.10 master.hadoop
+192.168.123.11 slave1.hadoop
+
+VMware安装和CentOS安装
+百度一大堆，这里不再介绍，接下来直奔主题。
+
+静态IP配置
+在">
+<meta property="og:image" content="http://i.imgur.com/e8UaMKp.png">
+<meta property="og:image" content="http://i.imgur.com/uw4CRZI.png">
+<meta property="og:image" content="http://i.imgur.com/zOdoJzz.png">
+<meta property="og:image" content="http://i.imgur.com/8RS4eZ8.png">
+<meta property="og:image" content="http://i.imgur.com/0DzxQ3d.png">
+<meta property="og:image" content="http://i.imgur.com/PGXDywo.png">
+<meta property="og:image" content="http://i.imgur.com/QciKqE2.png">
+<meta property="og:image" content="http://i.imgur.com/9LqtL6j.png">
+<meta property="og:updated_time" content="2016-04-20T08:16:48.288Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="CentOS7下分布式Hadoop">
+<meta name="twitter:description" content="声明
+环境：VMware12,2个CentOS7虚拟机，一台虚拟机名称为master.hadoop(NameNode),一台为slave1.hadoop(DataNode)
+
+IP配置192.168.123.10 master.hadoop
+192.168.123.11 slave1.hadoop
+
+VMware安装和CentOS安装
+百度一大堆，这里不再介绍，接下来直奔主题。
+
+静态IP配置
+在">
+<meta name="twitter:image" content="http://i.imgur.com/e8UaMKp.png">
+
+
+
+<script type="text/javascript" id="hexo.configuration">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: 0,
+      author: '博主'
+    }
+  };
+</script>
+
+  <title> CentOS7下分布式Hadoop | Super霸王肉条条 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?6f1197aaf232ff9d09307423909b9fa4";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta ">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/"  class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">Super霸王肉条条</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">欢迎来到我的博客</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-home fa-fw"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-th fa-fw"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-user fa-fw"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-archive fa-fw"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-tags fa-fw"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-commonweal">
+          <a href="/404.html" rel="section">
+            
+              <i class="menu-item-icon fa fa-heartbeat fa-fw"></i> <br />
+            
+            公益404
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                CentOS7下分布式Hadoop
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-20T10:40:06+08:00" content="2016-04-20">
+              2016-04-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/分布式Hadoop配置/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式Hadoop配置</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/20/CentOS7下分布式Hadoop/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/20/CentOS7下分布式Hadoop/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+		  
+		  
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h1><hr>
+<p><strong>环境：VMware12,2个CentOS7虚拟机，一台虚拟机名称为master.hadoop(NameNode),一台为slave1.hadoop(DataNode)</strong></p>
+<hr>
+<h1 id="IP配置"><a href="#IP配置" class="headerlink" title="IP配置"></a>IP配置</h1><p>192.168.123.10 master.hadoop</p>
+<p>192.168.123.11 slave1.hadoop</p>
+<hr>
+<h1 id="VMware安装和CentOS安装"><a href="#VMware安装和CentOS安装" class="headerlink" title="VMware安装和CentOS安装"></a>VMware安装和CentOS安装</h1><hr>
+<p>百度一大堆，这里不再介绍，接下来直奔主题。</p>
+<hr>
+<h1 id="静态IP配置"><a href="#静态IP配置" class="headerlink" title="静态IP配置"></a>静态IP配置</h1><hr>
+<p>在每个虚拟机中都要配置静态IP地址，因为VMware中虚拟机的IP地址默认配置策略是DHCP，<br>每次重启虚拟机后，IP地址都会发生变化，对于Hadoop集群来说，这是绝对不允许的。</p>
+<hr>
+<h2 id="关闭VMware的DHCP（自行百度）"><a href="#关闭VMware的DHCP（自行百度）" class="headerlink" title="关闭VMware的DHCP（自行百度）"></a>关闭VMware的DHCP（自行百度）</h2><h2 id="设置CentOS静态IP"><a href="#设置CentOS静态IP" class="headerlink" title="设置CentOS静态IP"></a>设置CentOS静态IP</h2><h3 id="修改-etc-sysconfig-network"><a href="#修改-etc-sysconfig-network" class="headerlink" title="修改/etc/sysconfig/network"></a>修改/etc/sysconfig/network</h3><p>添加：</p>
+<pre><code>NETWORKING=yes 
+HOSTNAME=master.hadoop 
+GATEWAY=192.168.123.2
+</code></pre><h3 id="修改-etc-sysconfig-network-scripts-ifcfg-eth0"><a href="#修改-etc-sysconfig-network-scripts-ifcfg-eth0" class="headerlink" title="修改/etc/sysconfig/network-scripts/ifcfg-eth0"></a>修改/etc/sysconfig/network-scripts/ifcfg-eth0</h3><h4 id="在centOS7里面没有-ifcfg-eth0-文件，将-ifcfg-eno1677773-文件重命名为-ifcfg-eth0"><a href="#在centOS7里面没有-ifcfg-eth0-文件，将-ifcfg-eno1677773-文件重命名为-ifcfg-eth0" class="headerlink" title="在centOS7里面没有 ifcfg-eth0 文件，将 ifcfg-eno1677773 文件重命名为 ifcfg-eth0"></a>在centOS7里面没有 <strong>ifcfg-eth0</strong> 文件，将 <strong>ifcfg-eno1677773</strong> 文件重命名为 <strong>ifcfg-eth0</strong></h4><pre><code>cd /etc/sysconfig/network-scripts
+mv ifcfg-eno1677773 ifcfg-eth0
+</code></pre><h4 id="修改操作文件"><a href="#修改操作文件" class="headerlink" title="修改操作文件"></a>修改操作文件</h4><pre><code>gedit /etc/sysconfig/grub  打开grub文件 
+</code></pre><p>在文件中添加： net.ifnames=0 biosdevname=0，下图所示：</p>
+<p><img src="http://i.imgur.com/e8UaMKp.png" alt=""></p>
+<h4 id="重新生成GRUB配置并更新内核"><a href="#重新生成GRUB配置并更新内核" class="headerlink" title="重新生成GRUB配置并更新内核"></a>重新生成GRUB配置并更新内核</h4><p>执行：</p>
+<pre><code>grub2-mkconfig -o /boot/grub2/grub.cfg
+</code></pre><h4 id="修改-etc-sysconfig-network-scripts-ifcfg-eth0-1"><a href="#修改-etc-sysconfig-network-scripts-ifcfg-eth0-1" class="headerlink" title="修改/etc/sysconfig/network-scripts/ifcfg-eth0"></a>修改/etc/sysconfig/network-scripts/ifcfg-eth0</h4><p><img src="http://i.imgur.com/uw4CRZI.png" alt=""></p>
+<p>HWADDR：MAC设备号，无需更改</p>
+<p>需要增加：IPADDR,NETMASK,DNS1</p>
+<p>将 BOOTPROTO 设置成 static</p>
+<h3 id="etc-resolv-conf"><a href="#etc-resolv-conf" class="headerlink" title="/etc/resolv.conf"></a>/etc/resolv.conf</h3><p>配置好DNS SERVER后该文件会自动配置，可打开查看，无需再配</p>
+<p>到这一步，master.hadoop 的静态 IP地址为： 192.168.123.10</p>
+<hr>
+<p><strong>在slave1.hadoop中同样进行配置</strong></p>
+<hr>
+<h2 id="配置hosts文件"><a href="#配置hosts文件" class="headerlink" title="配置hosts文件"></a>配置hosts文件</h2><p>192.168.123.10 master.hadoop</p>
+<p>192.168.123.11 slave1.hadoop</p>
+<hr>
+<p><strong>在slave1.hadoop中同样进行配置</strong></p>
+<hr>
+<h1 id="JDK安装"><a href="#JDK安装" class="headerlink" title="JDK安装"></a>JDK安装</h1><p>在文章《CentOS7 JDK 环境搭建》 里面已经详细介绍</p>
+<h1 id="配置ssh"><a href="#配置ssh" class="headerlink" title="配置ssh"></a>配置ssh</h1><p>之前文章中已经介绍过</p>
+<p>在终端依次执行：</p>
+<pre><code>ssh-keygen -t rsa -P &quot;&quot;
+cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys
+ssh-copy-id -i /root/.ssh/id_rsa.pub root@slave1.hadoop
+</code></pre><p>提示输入slave1.hadoop上的root用户密码，然后完成。</p>
+<pre><code>ssh slave1.hadoop 无密码登陆
+</code></pre><h1 id="安装Hadoop"><a href="#安装Hadoop" class="headerlink" title="安装Hadoop"></a>安装Hadoop</h1><p>安装的话之前在单机版中已经详细介绍，不过这里的核心文件配置需要进行改动</p>
+<h2 id="环境变量设置"><a href="#环境变量设置" class="headerlink" title="环境变量设置"></a>环境变量设置</h2><pre><code>gedit /etc/profile
+</code></pre><p>添加：</p>
+<p>export HADOOP_HOME=/usr/local/hadoop</p>
+<p>export HADOOP_COMMON_HOME=$HADOOP_HOME </p>
+<p>export HADOOP_HDFS_HOME=$HADOOP_HOME</p>
+<p>export HADOOP_MAPRED_HOME=$HADOOP_HOME</p>
+<p>export HADOOP_YARN_HOME=$HADOOP_HOME </p>
+<p>export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop </p>
+<p>export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$HADOOP_HOME/lib</p>
+<p>export YARN_HOME=${HADOOP_HOME}</p>
+<h2 id="配置核心文件"><a href="#配置核心文件" class="headerlink" title="配置核心文件"></a>配置核心文件</h2><h3 id="core-site-xml配置"><a href="#core-site-xml配置" class="headerlink" title="core-site.xml配置"></a>core-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;fs.defaultFS&lt;/name&gt; 
+    &lt;value&gt;hdfs://master.hadoop:9000&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;io.file.buffer.size&lt;/name&gt; 
+    &lt;value&gt;131072&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hadoop.tmp.dir&lt;/name&gt; 
+    &lt;value&gt;/usr/local/temp&lt;/value&gt; 
+    &lt;description&gt; Abase for other temporary directories.&lt;/description&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hadoop.proxyuser.root.hosts&lt;/name&gt; 
+    &lt;value&gt;master.hadoop&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hadoop.proxyuser.root.groups&lt;/name&gt; 
+    &lt;value&gt;*&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="hadoop-env-sh配置"><a href="#hadoop-env-sh配置" class="headerlink" title="hadoop-env.sh配置"></a>hadoop-env.sh配置</h3><pre><code>export HADOOP_PID_DIR=/usr/local/temp/hadoop/pids
+export JAVA_HOME=/usr/local/java/jdk1.7.0_79
+</code></pre><h3 id="hdfs-site-xml配置"><a href="#hdfs-site-xml配置" class="headerlink" title="hdfs-site.xml配置"></a>hdfs-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:9001&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt; 
+    &lt;value&gt;/usr/local/dfs/name&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt;
+    &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;
+    &lt;value&gt;/usr/local/dfs/data&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;dfs.replication&lt;/name&gt; 
+    &lt;value&gt;3&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;dfs.webhdfs.enabled&lt;/name&gt; 
+    &lt;value&gt;true&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="mapred-site-xml配置"><a href="#mapred-site-xml配置" class="headerlink" title="mapred-site.xml配置"></a>mapred-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;mapreduce.framework.name&lt;/name&gt; 
+    &lt;value&gt;yarn&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;mapreduce.job.tracker&lt;/name&gt; 
+    &lt;value&gt;hdfs://master.hadoop:9101&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:10020&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;mapreduce.jobhistory.webapp.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:19888&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="slaves配置"><a href="#slaves配置" class="headerlink" title="slaves配置"></a>slaves配置</h3><p>添加：</p>
+<pre><code>slave1.hadoop 
+</code></pre><h3 id="yarn-env-sh配置"><a href="#yarn-env-sh配置" class="headerlink" title="yarn-env.sh配置"></a>yarn-env.sh配置</h3><pre><code>export JAVA_HOME=/usr/local/java/jdk1.7.0_79
+</code></pre><h3 id="yarn-site-xml配置"><a href="#yarn-site-xml配置" class="headerlink" title="yarn-site.xml配置"></a>yarn-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt; 
+    &lt;value&gt;mapreduce_shuffle&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt; yarn.nodemanager.aux-services.mapreduce.shuffle.class &lt;/name&gt; 
+    &lt;value&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8032&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.scheduler.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8030&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8031&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.admin.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8033&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.webapp.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8088&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="部署其他Slave节点"><a href="#部署其他Slave节点" class="headerlink" title="部署其他Slave节点"></a>部署其他Slave节点</h3><p>使用scp方式，例：</p>
+<pre><code>scp –r /usr/local/hadoop/ root@slave1.hadoop:/usr/local/
+</code></pre><p>通过scp命令将hadoop复制拷贝到slave1.hadoop上</p>
+<h2 id="启动关闭Hadoop"><a href="#启动关闭Hadoop" class="headerlink" title="启动关闭Hadoop"></a>启动关闭Hadoop</h2><h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><p>centOS7原有防火墙：</p>
+<pre><code>systemctl start firewalld.service#启动firewall
+systemctl stop firewalld.service#停止firewall
+systemctl disable firewalld.service#禁止firewall开机启动
+</code></pre><p>centOS7自定义防火墙：</p>
+<pre><code>service iptables stop 
+</code></pre><h3 id="格式化HDFS文件"><a href="#格式化HDFS文件" class="headerlink" title="格式化HDFS文件"></a>格式化HDFS文件</h3><p>只需要格式化一次即可，之后重启不必再进行格式化</p>
+<pre><code>cd /usr/local/hadoop/bin
+hadoop namenode –format
+</code></pre><h3 id="启动Hadoop"><a href="#启动Hadoop" class="headerlink" title="启动Hadoop"></a>启动Hadoop</h3><p>正在在这里一并验证下 ssh 无密码登陆服务，如下图所示：</p>
+<p><img src="http://i.imgur.com/zOdoJzz.png" alt=""></p>
+<p>启动 master.hadoop 上的 hadoop</p>
+<pre><code>cd /usr/local/hadoop/sbin
+start-all.sh
+</code></pre><p><img src="http://i.imgur.com/8RS4eZ8.png" alt=""></p>
+<p>在这里我们可以看到 slave1 上的 datanode和nodemanager也启动了，让我们在终端看看：</p>
+<p>master：</p>
+<p><img src="http://i.imgur.com/0DzxQ3d.png" alt=""></p>
+<p>slave1：</p>
+<p><img src="http://i.imgur.com/PGXDywo.png" alt=""></p>
+<p>ok，到这里没有问题。我们在终端发现所有的需要的节点都已经启动了，接下来在浏览器中验证一下：</p>
+<p>输入： <a href="http://master.hadoop:8088/cluster" target="_blank" rel="external">http://master.hadoop:8088/cluster</a></p>
+<p><img src="http://i.imgur.com/QciKqE2.png" alt=""></p>
+<p>这里可以看到节点已经启动成功。</p>
+<p>输入： <a href="http://master.hadoop:50070" target="_blank" rel="external">http://master.hadoop:50070</a></p>
+<p><img src="http://i.imgur.com/9LqtL6j.png" alt=""></p>
+<p>在这里可以得到更多的监控信息。</p>
+<p>到这里为止，Hadoop集群搭建就告一段落了，赶快动手行动起来吧！</p>
+<p>预告：后续会写一些集群上服务的搭建，像hbase,hive等等······</p>
+<p>一直学习，一直进步······</p>
+
+      
+    </div>
+    
+    <div>
+      
+        
+      
+    </div>
+
+    <div>
+      
+        
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Linux/" rel="tag">#Linux</a>
+          
+            <a href="/tags/Hadoop/" rel="tag">#Hadoop</a>
+          
+            <a href="/tags/HBase/" rel="tag">#HBase</a>
+          
+            <a href="/tags/Zookeeper/" rel="tag">#Zookeeper</a>
+          
+            <a href="/tags/分布式/" rel="tag">#分布式</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/04/18/CentOS7安装Eclipse/" rel="next" title="CentOS7安装Eclipse（该文章还未写）">
+                <i class="fa fa-chevron-left"></i> CentOS7安装Eclipse（该文章还未写）
+              </a>
+            
+          </div>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/04/20/CentOS7下分布式Hadoop/"
+           data-title="CentOS7下分布式Hadoop" data-url="http://yoursite.com/2016/04/20/CentOS7下分布式Hadoop/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel ">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/touxiang.png"
+               alt="霸王条" />
+          <p class="site-author-name" itemprop="name">霸王条</p>
+          <p class="site-description motion-element" itemprop="description">这是一个数据疯子的空间</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        <div class="links-of-blogroll motion-element">
+          
+        </div>
+
+      </section>
+
+      
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+            
+              
+            
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#声明"><span class="nav-number">1.</span> <span class="nav-text">声明</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#IP配置"><span class="nav-number">2.</span> <span class="nav-text">IP配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#VMware安装和CentOS安装"><span class="nav-number">3.</span> <span class="nav-text">VMware安装和CentOS安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#静态IP配置"><span class="nav-number">4.</span> <span class="nav-text">静态IP配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#关闭VMware的DHCP（自行百度）"><span class="nav-number">4.1.</span> <span class="nav-text">关闭VMware的DHCP（自行百度）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#设置CentOS静态IP"><span class="nav-number">4.2.</span> <span class="nav-text">设置CentOS静态IP</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-etc-sysconfig-network"><span class="nav-number">4.2.1.</span> <span class="nav-text">修改/etc/sysconfig/network</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改-etc-sysconfig-network-scripts-ifcfg-eth0"><span class="nav-number">4.2.2.</span> <span class="nav-text">修改/etc/sysconfig/network-scripts/ifcfg-eth0</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在centOS7里面没有-ifcfg-eth0-文件，将-ifcfg-eno1677773-文件重命名为-ifcfg-eth0"><span class="nav-number">4.2.2.1.</span> <span class="nav-text">在centOS7里面没有 ifcfg-eth0 文件，将 ifcfg-eno1677773 文件重命名为 ifcfg-eth0</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改操作文件"><span class="nav-number">4.2.2.2.</span> <span class="nav-text">修改操作文件</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#重新生成GRUB配置并更新内核"><span class="nav-number">4.2.2.3.</span> <span class="nav-text">重新生成GRUB配置并更新内核</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#修改-etc-sysconfig-network-scripts-ifcfg-eth0-1"><span class="nav-number">4.2.2.4.</span> <span class="nav-text">修改/etc/sysconfig/network-scripts/ifcfg-eth0</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#etc-resolv-conf"><span class="nav-number">4.2.3.</span> <span class="nav-text">/etc/resolv.conf</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置hosts文件"><span class="nav-number">4.3.</span> <span class="nav-text">配置hosts文件</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#JDK安装"><span class="nav-number">5.</span> <span class="nav-text">JDK安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#配置ssh"><span class="nav-number">6.</span> <span class="nav-text">配置ssh</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#安装Hadoop"><span class="nav-number">7.</span> <span class="nav-text">安装Hadoop</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#环境变量设置"><span class="nav-number">7.1.</span> <span class="nav-text">环境变量设置</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#配置核心文件"><span class="nav-number">7.2.</span> <span class="nav-text">配置核心文件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#core-site-xml配置"><span class="nav-number">7.2.1.</span> <span class="nav-text">core-site.xml配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hadoop-env-sh配置"><span class="nav-number">7.2.2.</span> <span class="nav-text">hadoop-env.sh配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#hdfs-site-xml配置"><span class="nav-number">7.2.3.</span> <span class="nav-text">hdfs-site.xml配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mapred-site-xml配置"><span class="nav-number">7.2.4.</span> <span class="nav-text">mapred-site.xml配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#slaves配置"><span class="nav-number">7.2.5.</span> <span class="nav-text">slaves配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yarn-env-sh配置"><span class="nav-number">7.2.6.</span> <span class="nav-text">yarn-env.sh配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#yarn-site-xml配置"><span class="nav-number">7.2.7.</span> <span class="nav-text">yarn-site.xml配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#部署其他Slave节点"><span class="nav-number">7.2.8.</span> <span class="nav-text">部署其他Slave节点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#启动关闭Hadoop"><span class="nav-number">7.3.</span> <span class="nav-text">启动关闭Hadoop</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#关闭防火墙"><span class="nav-number">7.3.1.</span> <span class="nav-text">关闭防火墙</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#格式化HDFS文件"><span class="nav-number">7.3.2.</span> <span class="nav-text">格式化HDFS文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#启动Hadoop"><span class="nav-number">7.3.3.</span> <span class="nav-text">启动Hadoop</span></a></li></ol></li></ol></li></ol></div>
+            
+          </div>
+        </section>
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">霸王条</span>
+</div>
+
+<div class="powered-by">
+  由 <a class="theme-link" href="http://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/vendors/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/vendors/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/vendors/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.0.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.0.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.0.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.0.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.0.1"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"superdayong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+  
+
+
+
+
+
+  
+  
+  
+
+  
+
+  
+  
+  
+
+</body>
+</html>

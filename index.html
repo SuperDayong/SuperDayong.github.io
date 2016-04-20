@@ -269,6 +269,467 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/20/CentOS7下分布式Hadoop/" itemprop="url">
+                  CentOS7下分布式Hadoop
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-20T10:40:06+08:00" content="2016-04-20">
+              2016-04-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/分布式Hadoop配置/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式Hadoop配置</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/20/CentOS7下分布式Hadoop/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/20/CentOS7下分布式Hadoop/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+		  
+		  
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="声明"><a href="#声明" class="headerlink" title="声明"></a>声明</h1><hr>
+<p><strong>环境：VMware12,2个CentOS7虚拟机，一台虚拟机名称为master.hadoop(NameNode),一台为slave1.hadoop(DataNode)</strong></p>
+<hr>
+<h1 id="IP配置"><a href="#IP配置" class="headerlink" title="IP配置"></a>IP配置</h1><p>192.168.123.10 master.hadoop</p>
+<p>192.168.123.11 slave1.hadoop</p>
+<hr>
+<h1 id="VMware安装和CentOS安装"><a href="#VMware安装和CentOS安装" class="headerlink" title="VMware安装和CentOS安装"></a>VMware安装和CentOS安装</h1><hr>
+<p>百度一大堆，这里不再介绍，接下来直奔主题。</p>
+<hr>
+<h1 id="静态IP配置"><a href="#静态IP配置" class="headerlink" title="静态IP配置"></a>静态IP配置</h1><hr>
+<p>在每个虚拟机中都要配置静态IP地址，因为VMware中虚拟机的IP地址默认配置策略是DHCP，<br>每次重启虚拟机后，IP地址都会发生变化，对于Hadoop集群来说，这是绝对不允许的。</p>
+<hr>
+<h2 id="关闭VMware的DHCP（自行百度）"><a href="#关闭VMware的DHCP（自行百度）" class="headerlink" title="关闭VMware的DHCP（自行百度）"></a>关闭VMware的DHCP（自行百度）</h2><h2 id="设置CentOS静态IP"><a href="#设置CentOS静态IP" class="headerlink" title="设置CentOS静态IP"></a>设置CentOS静态IP</h2><h3 id="修改-etc-sysconfig-network"><a href="#修改-etc-sysconfig-network" class="headerlink" title="修改/etc/sysconfig/network"></a>修改/etc/sysconfig/network</h3><p>添加：</p>
+<pre><code>NETWORKING=yes 
+HOSTNAME=master.hadoop 
+GATEWAY=192.168.123.2
+</code></pre><h3 id="修改-etc-sysconfig-network-scripts-ifcfg-eth0"><a href="#修改-etc-sysconfig-network-scripts-ifcfg-eth0" class="headerlink" title="修改/etc/sysconfig/network-scripts/ifcfg-eth0"></a>修改/etc/sysconfig/network-scripts/ifcfg-eth0</h3><h4 id="在centOS7里面没有-ifcfg-eth0-文件，将-ifcfg-eno1677773-文件重命名为-ifcfg-eth0"><a href="#在centOS7里面没有-ifcfg-eth0-文件，将-ifcfg-eno1677773-文件重命名为-ifcfg-eth0" class="headerlink" title="在centOS7里面没有 ifcfg-eth0 文件，将 ifcfg-eno1677773 文件重命名为 ifcfg-eth0"></a>在centOS7里面没有 <strong>ifcfg-eth0</strong> 文件，将 <strong>ifcfg-eno1677773</strong> 文件重命名为 <strong>ifcfg-eth0</strong></h4><pre><code>cd /etc/sysconfig/network-scripts
+mv ifcfg-eno1677773 ifcfg-eth0
+</code></pre><h4 id="修改操作文件"><a href="#修改操作文件" class="headerlink" title="修改操作文件"></a>修改操作文件</h4><pre><code>gedit /etc/sysconfig/grub  打开grub文件 
+</code></pre><p>在文件中添加： net.ifnames=0 biosdevname=0，下图所示：</p>
+<p><img src="http://i.imgur.com/e8UaMKp.png" alt=""></p>
+<h4 id="重新生成GRUB配置并更新内核"><a href="#重新生成GRUB配置并更新内核" class="headerlink" title="重新生成GRUB配置并更新内核"></a>重新生成GRUB配置并更新内核</h4><p>执行：</p>
+<pre><code>grub2-mkconfig -o /boot/grub2/grub.cfg
+</code></pre><h4 id="修改-etc-sysconfig-network-scripts-ifcfg-eth0-1"><a href="#修改-etc-sysconfig-network-scripts-ifcfg-eth0-1" class="headerlink" title="修改/etc/sysconfig/network-scripts/ifcfg-eth0"></a>修改/etc/sysconfig/network-scripts/ifcfg-eth0</h4><p><img src="http://i.imgur.com/uw4CRZI.png" alt=""></p>
+<p>HWADDR：MAC设备号，无需更改</p>
+<p>需要增加：IPADDR,NETMASK,DNS1</p>
+<p>将 BOOTPROTO 设置成 static</p>
+<h3 id="etc-resolv-conf"><a href="#etc-resolv-conf" class="headerlink" title="/etc/resolv.conf"></a>/etc/resolv.conf</h3><p>配置好DNS SERVER后该文件会自动配置，可打开查看，无需再配</p>
+<p>到这一步，master.hadoop 的静态 IP地址为： 192.168.123.10</p>
+<hr>
+<p><strong>在slave1.hadoop中同样进行配置</strong></p>
+<hr>
+<h2 id="配置hosts文件"><a href="#配置hosts文件" class="headerlink" title="配置hosts文件"></a>配置hosts文件</h2><p>192.168.123.10 master.hadoop</p>
+<p>192.168.123.11 slave1.hadoop</p>
+<hr>
+<p><strong>在slave1.hadoop中同样进行配置</strong></p>
+<hr>
+<h1 id="JDK安装"><a href="#JDK安装" class="headerlink" title="JDK安装"></a>JDK安装</h1><p>在文章《CentOS7 JDK 环境搭建》 里面已经详细介绍</p>
+<h1 id="配置ssh"><a href="#配置ssh" class="headerlink" title="配置ssh"></a>配置ssh</h1><p>之前文章中已经介绍过</p>
+<p>在终端依次执行：</p>
+<pre><code>ssh-keygen -t rsa -P &quot;&quot;
+cat /root/.ssh/id_rsa.pub &gt;&gt; /root/.ssh/authorized_keys
+ssh-copy-id -i /root/.ssh/id_rsa.pub root@slave1.hadoop
+</code></pre><p>提示输入slave1.hadoop上的root用户密码，然后完成。</p>
+<pre><code>ssh slave1.hadoop 无密码登陆
+</code></pre><h1 id="安装Hadoop"><a href="#安装Hadoop" class="headerlink" title="安装Hadoop"></a>安装Hadoop</h1><p>安装的话之前在单机版中已经详细介绍，不过这里的核心文件配置需要进行改动</p>
+<h2 id="环境变量设置"><a href="#环境变量设置" class="headerlink" title="环境变量设置"></a>环境变量设置</h2><pre><code>gedit /etc/profile
+</code></pre><p>添加：</p>
+<p>export HADOOP_HOME=/usr/local/hadoop</p>
+<p>export HADOOP_COMMON_HOME=$HADOOP_HOME </p>
+<p>export HADOOP_HDFS_HOME=$HADOOP_HOME</p>
+<p>export HADOOP_MAPRED_HOME=$HADOOP_HOME</p>
+<p>export HADOOP_YARN_HOME=$HADOOP_HOME </p>
+<p>export HADOOP_CONF_DIR=$HADOOP_HOME/etc/hadoop </p>
+<p>export PATH=$PATH:$HADOOP_HOME/bin:$HADOOP_HOME/sbin:$HADOOP_HOME/lib</p>
+<p>export YARN_HOME=${HADOOP_HOME}</p>
+<h2 id="配置核心文件"><a href="#配置核心文件" class="headerlink" title="配置核心文件"></a>配置核心文件</h2><h3 id="core-site-xml配置"><a href="#core-site-xml配置" class="headerlink" title="core-site.xml配置"></a>core-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;fs.defaultFS&lt;/name&gt; 
+    &lt;value&gt;hdfs://master.hadoop:9000&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;io.file.buffer.size&lt;/name&gt; 
+    &lt;value&gt;131072&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hadoop.tmp.dir&lt;/name&gt; 
+    &lt;value&gt;/usr/local/temp&lt;/value&gt; 
+    &lt;description&gt; Abase for other temporary directories.&lt;/description&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hadoop.proxyuser.root.hosts&lt;/name&gt; 
+    &lt;value&gt;master.hadoop&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hadoop.proxyuser.root.groups&lt;/name&gt; 
+    &lt;value&gt;*&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="hadoop-env-sh配置"><a href="#hadoop-env-sh配置" class="headerlink" title="hadoop-env.sh配置"></a>hadoop-env.sh配置</h3><pre><code>export HADOOP_PID_DIR=/usr/local/temp/hadoop/pids
+export JAVA_HOME=/usr/local/java/jdk1.7.0_79
+</code></pre><h3 id="hdfs-site-xml配置"><a href="#hdfs-site-xml配置" class="headerlink" title="hdfs-site.xml配置"></a>hdfs-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;dfs.namenode.secondary.http-address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:9001&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;dfs.namenode.name.dir&lt;/name&gt; 
+    &lt;value&gt;/usr/local/dfs/name&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt;
+    &lt;name&gt;dfs.datanode.data.dir&lt;/name&gt;
+    &lt;value&gt;/usr/local/dfs/data&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;dfs.replication&lt;/name&gt; 
+    &lt;value&gt;3&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;dfs.webhdfs.enabled&lt;/name&gt; 
+    &lt;value&gt;true&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="mapred-site-xml配置"><a href="#mapred-site-xml配置" class="headerlink" title="mapred-site.xml配置"></a>mapred-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;mapreduce.framework.name&lt;/name&gt; 
+    &lt;value&gt;yarn&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;mapreduce.job.tracker&lt;/name&gt; 
+    &lt;value&gt;hdfs://master.hadoop:9101&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;mapreduce.jobhistory.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:10020&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;mapreduce.jobhistory.webapp.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:19888&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="slaves配置"><a href="#slaves配置" class="headerlink" title="slaves配置"></a>slaves配置</h3><p>添加：</p>
+<pre><code>slave1.hadoop 
+</code></pre><h3 id="yarn-env-sh配置"><a href="#yarn-env-sh配置" class="headerlink" title="yarn-env.sh配置"></a>yarn-env.sh配置</h3><pre><code>export JAVA_HOME=/usr/local/java/jdk1.7.0_79
+</code></pre><h3 id="yarn-site-xml配置"><a href="#yarn-site-xml配置" class="headerlink" title="yarn-site.xml配置"></a>yarn-site.xml配置</h3><pre><code>&lt;property&gt; 
+    &lt;name&gt;yarn.nodemanager.aux-services&lt;/name&gt; 
+    &lt;value&gt;mapreduce_shuffle&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt; yarn.nodemanager.aux-services.mapreduce.shuffle.class &lt;/name&gt; 
+    &lt;value&gt;org.apache.hadoop.mapred.ShuffleHandler&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8032&lt;/value&gt;
+&lt;/property&gt;
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.scheduler.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8030&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.resource-tracker.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8031&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.admin.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8033&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;yarn.resourcemanager.webapp.address&lt;/name&gt; 
+    &lt;value&gt;master.hadoop:8088&lt;/value&gt; 
+&lt;/property&gt;
+</code></pre><h3 id="部署其他Slave节点"><a href="#部署其他Slave节点" class="headerlink" title="部署其他Slave节点"></a>部署其他Slave节点</h3><p>使用scp方式，例：</p>
+<pre><code>scp –r /usr/local/hadoop/ root@slave1.hadoop:/usr/local/
+</code></pre><p>通过scp命令将hadoop复制拷贝到slave1.hadoop上</p>
+<h2 id="启动关闭Hadoop"><a href="#启动关闭Hadoop" class="headerlink" title="启动关闭Hadoop"></a>启动关闭Hadoop</h2><h3 id="关闭防火墙"><a href="#关闭防火墙" class="headerlink" title="关闭防火墙"></a>关闭防火墙</h3><p>centOS7原有防火墙：</p>
+<pre><code>systemctl start firewalld.service#启动firewall
+systemctl stop firewalld.service#停止firewall
+systemctl disable firewalld.service#禁止firewall开机启动
+</code></pre><p>centOS7自定义防火墙：</p>
+<pre><code>service iptables stop 
+</code></pre><h3 id="格式化HDFS文件"><a href="#格式化HDFS文件" class="headerlink" title="格式化HDFS文件"></a>格式化HDFS文件</h3><p>只需要格式化一次即可，之后重启不必再进行格式化</p>
+<pre><code>cd /usr/local/hadoop/bin
+hadoop namenode –format
+</code></pre><h3 id="启动Hadoop"><a href="#启动Hadoop" class="headerlink" title="启动Hadoop"></a>启动Hadoop</h3><p>正在在这里一并验证下 ssh 无密码登陆服务，如下图所示：</p>
+<p><img src="http://i.imgur.com/zOdoJzz.png" alt=""></p>
+<p>启动 master.hadoop 上的 hadoop</p>
+<pre><code>cd /usr/local/hadoop/sbin
+start-all.sh
+</code></pre><p><img src="http://i.imgur.com/8RS4eZ8.png" alt=""></p>
+<p>在这里我们可以看到 slave1 上的 datanode和nodemanager也启动了，让我们在终端看看：</p>
+<p>master：</p>
+<p><img src="http://i.imgur.com/0DzxQ3d.png" alt=""></p>
+<p>slave1：</p>
+<p><img src="http://i.imgur.com/PGXDywo.png" alt=""></p>
+<p>ok，到这里没有问题。我们在终端发现所有的需要的节点都已经启动了，接下来在浏览器中验证一下：</p>
+<p>输入： <a href="http://master.hadoop:8088/cluster" target="_blank" rel="external">http://master.hadoop:8088/cluster</a></p>
+<p><img src="http://i.imgur.com/QciKqE2.png" alt=""></p>
+<p>这里可以看到节点已经启动成功。</p>
+<p>输入： <a href="http://master.hadoop:50070" target="_blank" rel="external">http://master.hadoop:50070</a></p>
+<p><img src="http://i.imgur.com/9LqtL6j.png" alt=""></p>
+<p>在这里可以得到更多的监控信息。</p>
+<p>到这里为止，Hadoop集群搭建就告一段落了，赶快动手行动起来吧！</p>
+<p>预告：后续会写一些集群上服务的搭建，像hbase,hive等等······</p>
+<p>一直学习，一直进步······</p>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
+                <a class="post-title-link" href="/2016/04/18/CentOS7安装Eclipse/" itemprop="url">
+                  CentOS7安装Eclipse（该文章还未写）
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-18T19:24:07+08:00" content="2016-04-18">
+              2016-04-18
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/Eclipse/" itemprop="url" rel="index">
+                    <span itemprop="name">Eclipse</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/18/CentOS7安装Eclipse/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/18/CentOS7安装Eclipse/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+		  
+		  
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="下载Eclipse"><a href="#下载Eclipse" class="headerlink" title="下载Eclipse"></a>下载Eclipse</h1><p><a href="http://mirrors.noc.im/apache/hbase/hbase-1.0.3/" target="_blank" rel="external">http://mirrors.noc.im/apache/hbase/hbase-1.0.3/</a></p>
+<h1 id="解压安装Eclipse"><a href="#解压安装Eclipse" class="headerlink" title="解压安装Eclipse"></a>解压安装Eclipse</h1>
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/18/Hadoop-WordCount-运行实例/" itemprop="url">
                   Hadoop WordCount 运行实例
                 </a>
@@ -426,7 +887,7 @@
               
                 
                 <a class="post-title-link" href="/2016/04/15/VMware下CentOS7配置hadoop/" itemprop="url">
-                  VMware下CentOS7配置hadoop
+                  VMware下CentOS7配置hadoop(单机版)
                 </a>
               
             
@@ -967,146 +1428,13 @@ export PATH=$PATH:$JAVA_HOME/bin
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/07/My-new-post/" itemprop="url">
-                  第一篇Hexo博客
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-07T17:30:03+08:00" content="2016-04-07">
-              2016-04-07
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Index/" itemprop="url" rel="index">
-                    <span itemprop="name">Index</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/07/My-new-post/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/07/My-new-post/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-		  
-		  
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="更换主题"><a href="#更换主题" class="headerlink" title="更换主题"></a>更换主题</h2><p><em><strong>1，首先在Git上寻找自己需要的主题，在博客目录 D:\hexo 下右键点击Git Bash，输入以下命令</strong></em></p>
-<pre><code>git clone https://github.com/iissnan/hexo-theme-next themes/next
-</code></pre><p><img src="http://i.imgur.com/PK38EMu.png" alt=""></p>
-<p>这样就完成了第一步，并且会出现 D:\HEXO\themes\next 这个文件夹</p>
-<p><em><strong>2，打开 D:\HEXO 目录下的 (下划线)config.yml 文件，将 theme 改为 next</strong></em></p>
-<p><img src="http://i.imgur.com/uQQlTMi.png" alt=""></p>
-<p>保存并退出即可</p>
-<p><em><strong>3,本地测试</strong></em></p>
-<p>依次执行下面语句</p>
-<pre><code>hexo g #生成静态网页 
-hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭server） 
-</code></pre><p>打开浏览器，输入： <a href="http://localhost:4000/" target="_blank" rel="external">http://localhost:4000/</a></p>
-<p><img src="http://i.imgur.com/wWEYQzE.png" alt=""></p>
-<p>–这样本地的博客就建好了，怎么样，很简单吧！</p>
-<p><em><strong>4，下一步我们要做的就是部署</strong></em></p>
-<pre><code>hexo deploy  #进行部署
-</code></pre><p>然后可以使用Github用户名.github.io进行访问, 或者设置个性域名，最晚10分钟左右，即可看到自己的效果</p>
-
-          
-        
-      
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right"></i></a>
+  </nav>
+
 
 
           </div>
@@ -1145,7 +1473,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">4</span>
+              <span class="site-state-item-count">6</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1153,7 +1481,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">3</span>
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
@@ -1162,7 +1490,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
           
             <div class="site-state-item site-state-tags">
               <a href="/tags">
-                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
