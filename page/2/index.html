@@ -269,6 +269,220 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/11/虚拟机/" itemprop="url">
+                  CentOS7 JDK 环境搭建
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-11T10:14:17+08:00" content="2016-04-11">
+              2016-04-11
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/11/虚拟机/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/11/虚拟机/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+		  
+		  
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="主要准备工具"><a href="#主要准备工具" class="headerlink" title="主要准备工具"></a>主要准备工具</h1><ol>
+<li><p>VMware（这里我用的是12版）</p>
+<ul>
+<li>链接：<a href="http://pan.baidu.com/s/1eShRGBK" target="_blank" rel="external">http://pan.baidu.com/s/1eShRGBK</a> 密码：0x6w</li>
+</ul>
+</li>
+<li><p>CentOS-7-x86_64-DVD-1511.iso（文件可以去CentOS官网下载）</p>
+</li>
+<li><p>JDK</p>
+<ul>
+<li>链接：<a href="http://pan.baidu.com/s/1hrOQLKS" target="_blank" rel="external">http://pan.baidu.com/s/1hrOQLKS</a> 密码：9cc6</li>
+</ul>
+</li>
+</ol>
+<p>这个文件下载后解压缩，然后再压缩为 .tar.gz 格式的压缩文件就好了。</p>
+<hr>
+<h1 id="JDK操作步骤"><a href="#JDK操作步骤" class="headerlink" title="JDK操作步骤"></a>JDK操作步骤</h1><hr>
+<h2 id="检查JDK版本"><a href="#检查JDK版本" class="headerlink" title="检查JDK版本"></a>检查JDK版本</h2><hr>
+<pre><code>[dayong@localhost ~]$ java -version
+</code></pre><hr>
+<ul>
+<li>java version “1.7.0_51”</li>
+<li>OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_64 u51-b31)</li>
+<li>OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)</li>
+</ul>
+<hr>
+<h2 id="检查JDK安装包"><a href="#检查JDK安装包" class="headerlink" title="检查JDK安装包"></a>检查JDK安装包</h2><hr>
+<pre><code>[dayong@localhost ~]$ rpm -qa | grep java
+</code></pre><hr>
+<ul>
+<li>python-javapackages-3.4.1-5.el7.noarch</li>
+<li>javapackages-tools-3.4.1-5.el7.noarch</li>
+<li>java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64</li>
+<li>tzdata-java-2014b-1.el7.noarch</li>
+<li>java-1.7.0-openjdk-1.7.0.51-2.4.5.5.el7.x86_64</li>
+</ul>
+<hr>
+<h2 id="卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）"><a href="#卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）" class="headerlink" title="卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）"></a>卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）</h2><hr>
+<pre><code>[dayong@localhost ~]$ rpm -e --nodeps tzdata-java-2014b-1.el7.noarch
+</code></pre><hr>
+<ul>
+<li>错误：can’t create 事务 lock on /var/lib/rpm/.rpm.lock (权限不够)</li>
+<li>这一步就是说 dayong 账号没权限，很简单，我们直接用root账号（当然也可以赋权限，先简单着来吧）</li>
+</ul>
+<hr>
+<pre><code>[dayong@localhost ~]$ su root 
+[root@localhost ~]# rpm -e --nodeps tzdata-java-2014b-1.el7.noarch
+[root@localhost ~]# rpm -e --nodeps java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64
+[root@localhost ~]# rpm -e --nodeps java-1.7.0-openjdk-1.7.0.51-2.4.5.5.el7.x86_64
+</code></pre><hr>
+<p>这样原有的JDK就被我们卸载干净了，接下来我们就可以安装自己下载的JDK了</p>
+<hr>
+<h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><hr>
+<p>首先进入到JDK压缩包的路径下</p>
+<hr>
+<pre><code>cd /home/dayong/下载
+</code></pre><hr>
+<ul>
+<li>[root@localhost Downloads]# ls -l</li>
+<li>总用量 149936</li>
+<li>-rw-rw-r–. 1 dayong dayong 153530841 4月  11 13:14 jdk1.7.0_79.tar.gz</li>
+</ul>
+<hr>
+<p>将文件移到新建的java文件夹下面</p>
+<hr>
+<pre><code>cp jdk1.7.0_79.tar.gz /usr/local/java
+</code></pre><hr>
+<p>到java文件夹路径下解压压缩包，并删除原压缩包</p>
+<hr>
+<pre><code>tar xvf jdk1.7.0_79.tar.gz
+rm jdk1.7.0_79.tar.gz
+</code></pre><hr>
+<h2 id="配置JDK环境变量"><a href="#配置JDK环境变量" class="headerlink" title="配置JDK环境变量"></a>配置JDK环境变量</h2><hr>
+<p>这里直接采用全局设置，修改文件 etc/profile 文件</p>
+<hr>
+<pre><code>gedit /etc/profile 或者 vi /etc/profile
+</code></pre><hr>
+<p>在文件末尾添加如下几行环境变量配置:</p>
+<pre><code>export JAVA_HOME=/usr/local/java/jdk1.7.0_79
+export JRE_HOME=/usr/local/java/jdk1.7.0_79/jre
+export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
+export PATH=$PATH:$JAVA_HOME/bin
+</code></pre><p>保存并退出文件，接下来使文件生效</p>
+<hr>
+<pre><code>1，source /etc/profile   --使文件生效
+2，reboot --重启生效
+</code></pre><hr>
+<p>在终端输入</p>
+<hr>
+<pre><code>java -version
+</code></pre><hr>
+<p><img src="http://i.imgur.com/s6ltahF.png" alt=""></p>
+<p>到这里，JDK环境已经搭配好了</p>
+<hr>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/07/My-new-post/" itemprop="url">
                   第一篇Hexo博客
                 </a>
@@ -430,7 +644,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -438,7 +652,7 @@ hexo s #开启预览访问端口（默认端口4000，&apos;ctrl + c&apos;关闭
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>

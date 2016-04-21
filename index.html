@@ -269,6 +269,292 @@
             
               
                 
+                <a class="post-title-link" href="/2016/04/20/Hadoop集群下Hbase搭建/" itemprop="url">
+                  Hadoop集群下Hbase搭建
+                </a>
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time itemprop="dateCreated" datetime="2016-04-20T18:33:45+08:00" content="2016-04-20">
+              2016-04-20
+            </time>
+          </span>
+
+          
+            <span class="post-category" >
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux</span>
+                  </a>
+                </span>
+
+                
+                
+                  ， 
+                
+
+              
+                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
+                  <a href="/categories/Linux/分布式Hadoop配置/" itemprop="url" rel="index">
+                    <span itemprop="name">分布式Hadoop配置</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/04/20/Hadoop集群下Hbase搭建/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/20/Hadoop集群下Hbase搭建/" itemprop="commentsCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+		  
+		  
+
+          
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="安装Zookeeper"><a href="#安装Zookeeper" class="headerlink" title="安装Zookeeper"></a>安装Zookeeper</h1><h2 id="安装配置Zookeeper"><a href="#安装配置Zookeeper" class="headerlink" title="安装配置Zookeeper"></a>安装配置Zookeeper</h2><h3 id="安装Zookeeper-1"><a href="#安装Zookeeper-1" class="headerlink" title="安装Zookeeper"></a>安装Zookeeper</h3><p>使用root账户登录master.hadoop机器。打开终端窗口，执行以下命令： </p>
+<pre><code>cd /usr/local //进入local目录 
+tar xzf zookeeper-3.4.6.tar.gz //解压缩zookeeper安装程序 
+mv zookeeper-3.4.6 zookeeper //修改zookeeper安装目录名称
+</code></pre><h3 id="配置Zookeeper环境变量"><a href="#配置Zookeeper环境变量" class="headerlink" title="配置Zookeeper环境变量"></a>配置Zookeeper环境变量</h3><p>打开/etc/profile文件，添加修改zookeeper环境变量信息，信息如下： </p>
+<pre><code>export ZOOKEEPER_HOME=/usr/local/zookeeper 
+export PATH=$PATH:$ZOOKEEPER_HOME/bin 
+</code></pre><p>保存后，执行source /etc/profile，刷新系统环境变量。</p>
+<h3 id="配置zoo-cfg"><a href="#配置zoo-cfg" class="headerlink" title="配置zoo.cfg"></a>配置zoo.cfg</h3><p>进入zookeeper安装目录下的conf目录，复制zoo_sample.cfg文件，将其改名为zoo.cfg，打开此文件，添加修改如下信息。 </p>
+<pre><code>tickTime=2000 
+initLimit=5 
+syncLimit=2 
+dataDir=/usr/local/temp/zookeeper 
+dataLogDir=/usr/local/zookeeper/logs
+clientPort=2181 
+server.1=master.hadoop:2888:3888 
+server.2=slave1.hadoop:2888:3888
+</code></pre><h2 id="启动关闭Zookeeper"><a href="#启动关闭Zookeeper" class="headerlink" title="启动关闭Zookeeper"></a>启动关闭Zookeeper</h2><h3 id="启动zookeeper"><a href="#启动zookeeper" class="headerlink" title="启动zookeeper"></a>启动zookeeper</h3><p>启动master节点上的zookeeper和slave节点的zookeeper的命令式一样的。命令如下。 </p>
+<pre><code>[root@master bin]# zkServer.sh start 
+
+[root@master bin]# jps
+</code></pre><h3 id="关闭zookeeper"><a href="#关闭zookeeper" class="headerlink" title="关闭zookeeper"></a>关闭zookeeper</h3><p>关闭master节点上的zookeeper和slave节点的zookeeper的命令式一样的。</p>
+<pre><code>[root@master bin]# zkServer.sh stop
+</code></pre><h1 id="安装配置HBase"><a href="#安装配置HBase" class="headerlink" title="安装配置HBase"></a>安装配置HBase</h1><h2 id="安装HBase"><a href="#安装HBase" class="headerlink" title="安装HBase"></a>安装HBase</h2><p>打开终端窗口，执行以下命令： </p>
+<pre><code>cd /usr/local //进入local目录 
+tar xzf hbase-1.0.3-bin.tar.gz //解压缩hbase安装程序 
+mv hbase-1.0.3 hbase //修改hbase安装目录名称
+</code></pre><h2 id="配置HBase环境变量"><a href="#配置HBase环境变量" class="headerlink" title="配置HBase环境变量"></a>配置HBase环境变量</h2><p>打开/etc/profile文件，添加HBase环境变量信息，信息如下： </p>
+<pre><code>export HBASE_HOME=/usr/local/hbase
+export PATH=$PATH:$HBASE_HOME/bin 
+</code></pre><p>保存后，执行# source /etc/profile，刷新系统环境变量。</p>
+<p>重复上述操作，为其他几个slave机进行同样的配置；</p>
+<p>或者使用scp命令将profile文件直接复制到slave1节点中进行覆盖操作，命令如下： </p>
+<pre><code>scp -r /etc/profile root@slave1.hadoop:/etc
+</code></pre><h2 id="配置hbase-env-sh"><a href="#配置hbase-env-sh" class="headerlink" title="配置hbase-env.sh"></a>配置hbase-env.sh</h2><p>打开文件/usr/local/hbase/conf/hbase-env.sh，添加修改如下信息。 </p>
+<pre><code>#Java安装位置 
+export JAVA_HOME=/usr/local/java/jdk1.7.0_79
+
+#采用独立的ZooKeeper 
+export HBASE_MANAGES_ZK=false 
+
+#HBase类路径 
+export HBASE_CLASSPATH=/usr/local/hadoop/etc/hadoop 
+export HBASE_PID_DIR=/usr/local/temp/hbase/pids
+</code></pre><h2 id="配置hbase-site-xml"><a href="#配置hbase-site-xml" class="headerlink" title="配置hbase-site.xml"></a>配置hbase-site.xml</h2><pre><code>&lt;property&gt; 
+    &lt;name&gt;hbase.rootdir&lt;/name&gt; 
+    &lt;value&gt;hdfs://master.hadoop:9000/hbase&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.master&lt;/name&gt; 
+    &lt;value&gt;hdfs://master.hadoop:60000&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.master.port&lt;/name&gt; 
+    &lt;value&gt;60000&lt;/value&gt; 
+&lt;/property&gt;
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.master.maxclockskew&lt;/name&gt; 
+    &lt;value&gt;180000&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.cluster.distributed&lt;/name&gt; 
+    &lt;value&gt;true&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.zookeeper.quorum&lt;/name&gt; 
+    &lt;value&gt;slave1.hadoop&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.zookeeper.property.clientPort&lt;/name&gt; 
+    &lt;value&gt;2181&lt;/value&gt;
+    &lt;description&gt;Property from ZooKeeper&apos;s config zoo.cfg.The port at which the clients will connect. &lt;/description&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.zookeeper.property.dataDir&lt;/name&gt; 
+    &lt;value&gt;/usr/local/temp/zookeeper&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.tmp.dir&lt;/name&gt; 
+    &lt;value&gt;/usr/local/temp/hbase&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;zookeeper.znode.parent&lt;/name&gt; 
+    &lt;value&gt;/hbase&lt;/value&gt; 
+&lt;/property&gt;
+
+&lt;property&gt; 
+    &lt;name&gt;zookeeper.session.timeout&lt;/name&gt; 
+    &lt;value&gt;90000&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.regionserver.restart.on.zk.expire&lt;/name&gt; 
+    &lt;value&gt;true&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.master.info.port&lt;/name&gt; 
+    &lt;value&gt;60010&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.regionserver.info.port&lt;/name&gt;
+    &lt;value&gt;60030&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.client.scanner.caching&lt;/name&gt; 
+    &lt;value&gt;200&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.balancer.period&lt;/name&gt; 
+    &lt;value&gt;300000&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.client.write.buffer&lt;/name&gt; 
+    &lt;value&gt;10485760&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.hregion.majorcompaction&lt;/name&gt; 
+    &lt;value&gt;7200000&lt;/value&gt; 
+&lt;/property&gt;
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.hregion.max.filesize&lt;/name&gt; 
+    &lt;value&gt;67108864&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.hregion.memstore.flush.size&lt;/name&gt; 
+    &lt;value&gt;1048576&lt;/value&gt; 
+&lt;/property&gt; 
+
+&lt;property&gt; 
+    &lt;name&gt;hbase.server.thread.wakefrequency&lt;/name&gt; 
+    &lt;value&gt;30000&lt;/value&gt;
+&lt;/property&gt;
+</code></pre><h2 id="配置regionservers"><a href="#配置regionservers" class="headerlink" title="配置regionservers"></a>配置regionservers</h2><p>打开文件/usr/local/hbase/conf/regionservers，将作为data节点的slave主机名称分行输入进去并保存。 </p>
+<pre><code>slave1.hadoop
+</code></pre><h2 id="部署其他Slave节点"><a href="#部署其他Slave节点" class="headerlink" title="部署其他Slave节点"></a>部署其他Slave节点</h2><pre><code>scp -r /usr/local/hbase root@slave1.hadoop:/usr/local
+</code></pre><h1 id="启动关闭HBase"><a href="#启动关闭HBase" class="headerlink" title="启动关闭HBase"></a>启动关闭HBase</h1><h2 id="启动HBase"><a href="#启动HBase" class="headerlink" title="启动HBase"></a>启动HBase</h2><h3 id="启动master节点上的hbase"><a href="#启动master节点上的hbase" class="headerlink" title="启动master节点上的hbase"></a>启动master节点上的hbase</h3><pre><code>[root@master bin]# start-hbase.sh
+</code></pre><p>主界面： <a href="http://master.hadoop:60010" target="_blank" rel="external">http://master.hadoop:60010</a></p>
+
+          
+        
+      
+    </div>
+    
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                
                 <a class="post-title-link" href="/2016/04/20/CentOS7下分布式Hadoop/" itemprop="url">
                   CentOS7下分布式Hadoop
                 </a>
@@ -1214,220 +1500,6 @@ mkdir hdfs/data
 
 
     
-      
-
-  
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-            
-            
-              
-                
-                <a class="post-title-link" href="/2016/04/11/虚拟机/" itemprop="url">
-                  CentOS7 JDK 环境搭建
-                </a>
-              
-            
-          </h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            <span class="post-meta-item-icon">
-              <i class="fa fa-calendar-o"></i>
-            </span>
-            <span class="post-meta-item-text">发表于</span>
-            <time itemprop="dateCreated" datetime="2016-04-11T10:14:17+08:00" content="2016-04-11">
-              2016-04-11
-            </time>
-          </span>
-
-          
-            <span class="post-category" >
-              &nbsp; | &nbsp;
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              <span class="post-meta-item-text">分类于</span>
-              
-                <span itemprop="about" itemscope itemtype="https://schema.org/Thing">
-                  <a href="/categories/Linux/" itemprop="url" rel="index">
-                    <span itemprop="name">Linux</span>
-                  </a>
-                </span>
-
-                
-                
-
-              
-            </span>
-          
-
-          
-            
-              <span class="post-comments-count">
-                &nbsp; | &nbsp;
-                <a href="/2016/04/11/虚拟机/#comments" itemprop="discussionUrl">
-                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/04/11/虚拟机/" itemprop="commentsCount"></span>
-                </a>
-              </span>
-            
-          
-
-          
-		  
-		  
-
-          
-          
-
-        </div>
-      </header>
-    
-
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h1 id="主要准备工具"><a href="#主要准备工具" class="headerlink" title="主要准备工具"></a>主要准备工具</h1><ol>
-<li><p>VMware（这里我用的是12版）</p>
-<ul>
-<li>链接：<a href="http://pan.baidu.com/s/1eShRGBK" target="_blank" rel="external">http://pan.baidu.com/s/1eShRGBK</a> 密码：0x6w</li>
-</ul>
-</li>
-<li><p>CentOS-7-x86_64-DVD-1511.iso（文件可以去CentOS官网下载）</p>
-</li>
-<li><p>JDK</p>
-<ul>
-<li>链接：<a href="http://pan.baidu.com/s/1hrOQLKS" target="_blank" rel="external">http://pan.baidu.com/s/1hrOQLKS</a> 密码：9cc6</li>
-</ul>
-</li>
-</ol>
-<p>这个文件下载后解压缩，然后再压缩为 .tar.gz 格式的压缩文件就好了。</p>
-<hr>
-<h1 id="JDK操作步骤"><a href="#JDK操作步骤" class="headerlink" title="JDK操作步骤"></a>JDK操作步骤</h1><hr>
-<h2 id="检查JDK版本"><a href="#检查JDK版本" class="headerlink" title="检查JDK版本"></a>检查JDK版本</h2><hr>
-<pre><code>[dayong@localhost ~]$ java -version
-</code></pre><hr>
-<ul>
-<li>java version “1.7.0_51”</li>
-<li>OpenJDK Runtime Environment (rhel-2.4.5.5.el7-x86_64 u51-b31)</li>
-<li>OpenJDK 64-Bit Server VM (build 24.51-b03, mixed mode)</li>
-</ul>
-<hr>
-<h2 id="检查JDK安装包"><a href="#检查JDK安装包" class="headerlink" title="检查JDK安装包"></a>检查JDK安装包</h2><hr>
-<pre><code>[dayong@localhost ~]$ rpm -qa | grep java
-</code></pre><hr>
-<ul>
-<li>python-javapackages-3.4.1-5.el7.noarch</li>
-<li>javapackages-tools-3.4.1-5.el7.noarch</li>
-<li>java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64</li>
-<li>tzdata-java-2014b-1.el7.noarch</li>
-<li>java-1.7.0-openjdk-1.7.0.51-2.4.5.5.el7.x86_64</li>
-</ul>
-<hr>
-<h2 id="卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）"><a href="#卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）" class="headerlink" title="卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）"></a>卸载CentOS自带的OpenJDK（不建议使用自带的OpenJDK）</h2><hr>
-<pre><code>[dayong@localhost ~]$ rpm -e --nodeps tzdata-java-2014b-1.el7.noarch
-</code></pre><hr>
-<ul>
-<li>错误：can’t create 事务 lock on /var/lib/rpm/.rpm.lock (权限不够)</li>
-<li>这一步就是说 dayong 账号没权限，很简单，我们直接用root账号（当然也可以赋权限，先简单着来吧）</li>
-</ul>
-<hr>
-<pre><code>[dayong@localhost ~]$ su root 
-[root@localhost ~]# rpm -e --nodeps tzdata-java-2014b-1.el7.noarch
-[root@localhost ~]# rpm -e --nodeps java-1.7.0-openjdk-headless-1.7.0.51-2.4.5.5.el7.x86_64
-[root@localhost ~]# rpm -e --nodeps java-1.7.0-openjdk-1.7.0.51-2.4.5.5.el7.x86_64
-</code></pre><hr>
-<p>这样原有的JDK就被我们卸载干净了，接下来我们就可以安装自己下载的JDK了</p>
-<hr>
-<h2 id="安装JDK"><a href="#安装JDK" class="headerlink" title="安装JDK"></a>安装JDK</h2><hr>
-<p>首先进入到JDK压缩包的路径下</p>
-<hr>
-<pre><code>cd /home/dayong/下载
-</code></pre><hr>
-<ul>
-<li>[root@localhost Downloads]# ls -l</li>
-<li>总用量 149936</li>
-<li>-rw-rw-r–. 1 dayong dayong 153530841 4月  11 13:14 jdk1.7.0_79.tar.gz</li>
-</ul>
-<hr>
-<p>将文件移到新建的java文件夹下面</p>
-<hr>
-<pre><code>cp jdk1.7.0_79.tar.gz /usr/local/java
-</code></pre><hr>
-<p>到java文件夹路径下解压压缩包，并删除原压缩包</p>
-<hr>
-<pre><code>tar xvf jdk1.7.0_79.tar.gz
-rm jdk1.7.0_79.tar.gz
-</code></pre><hr>
-<h2 id="配置JDK环境变量"><a href="#配置JDK环境变量" class="headerlink" title="配置JDK环境变量"></a>配置JDK环境变量</h2><hr>
-<p>这里直接采用全局设置，修改文件 etc/profile 文件</p>
-<hr>
-<pre><code>gedit /etc/profile 或者 vi /etc/profile
-</code></pre><hr>
-<p>在文件末尾添加如下几行环境变量配置:</p>
-<pre><code>export JAVA_HOME=/usr/local/java/jdk1.7.0_79
-export JRE_HOME=/usr/local/java/jdk1.7.0_79/jre
-export CLASSPATH=.:$JAVA_HOME/jre/lib/rt.jar:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar
-export PATH=$PATH:$JAVA_HOME/bin
-</code></pre><p>保存并退出文件，接下来使文件生效</p>
-<hr>
-<pre><code>1，source /etc/profile   --使文件生效
-2，reboot --重启生效
-</code></pre><hr>
-<p>在终端输入</p>
-<hr>
-<pre><code>java -version
-</code></pre><hr>
-<p><img src="http://i.imgur.com/s6ltahF.png" alt=""></p>
-<p>到这里，JDK环境已经搭配好了</p>
-<hr>
-
-          
-        
-      
-    </div>
-    
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1473,7 +1545,7 @@ export PATH=$PATH:$JAVA_HOME/bin
         <nav class="site-state motion-element">
           <div class="site-state-item site-state-posts">
             <a href="/archives">
-              <span class="site-state-item-count">6</span>
+              <span class="site-state-item-count">7</span>
               <span class="site-state-item-name">日志</span>
             </a>
           </div>
@@ -1481,7 +1553,7 @@ export PATH=$PATH:$JAVA_HOME/bin
           
             <div class="site-state-item site-state-categories">
               <a href="/categories">
-                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
               </a>
             </div>
